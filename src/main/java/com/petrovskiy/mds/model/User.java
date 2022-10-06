@@ -3,6 +3,8 @@ package com.petrovskiy.mds.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -21,10 +23,12 @@ public class User {
     @Column(name = "username", nullable = false)
     private String username;
 
-    @Column(name = "email", nullable = false)
+    @Email
+    @Column(name = "email", nullable = false,unique = true)
     private String email;
 
     @Column(name = "name", nullable = false)
+    @Pattern(regexp = "^[\\p{Alpha}А-Яа-я]{2,65}$")
     private String name;
 
     @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.REMOVE) /*TODO ENUMERATION?*/
