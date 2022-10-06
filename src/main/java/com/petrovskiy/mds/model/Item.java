@@ -1,4 +1,4 @@
-package com.petrovskiy.mds.intern.model;
+package com.petrovskiy.mds.model;
 
 import lombok.Data;
 

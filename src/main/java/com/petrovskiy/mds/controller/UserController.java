@@ -1,4 +1,4 @@
-package com.petrovskiy.mds.intern.controller;
+package com.petrovskiy.mds.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

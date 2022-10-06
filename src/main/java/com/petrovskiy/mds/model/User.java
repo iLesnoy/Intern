@@ -1,9 +1,8 @@
-package com.petrovskiy.mds.intern.model;
+package com.petrovskiy.mds.model;
 
 import lombok.Data;
 
 import javax.persistence.*;
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -11,7 +10,7 @@ import java.util.UUID;
 
 @Data
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 public class User {
 
     @Id

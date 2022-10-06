@@ -1,12 +1,10 @@
-package com.petrovskiy.mds.intern.model;
+package com.petrovskiy.mds.model;
 
 import lombok.*;
-import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
-import java.util.Objects;
 import java.util.Set;
 
 

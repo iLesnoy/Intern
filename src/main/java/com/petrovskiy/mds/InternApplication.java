@@ -1,4 +1,4 @@
-package com.petrovskiy.mds.intern;
+package com.petrovskiy.mds;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

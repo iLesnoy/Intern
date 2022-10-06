@@ -1,7 +1,6 @@
-package com.petrovskiy.mds.intern.model;
+package com.petrovskiy.mds.model;
 
 import lombok.Data;
-import lombok.ToString;
 
 import javax.persistence.*;
 import java.math.BigInteger;
