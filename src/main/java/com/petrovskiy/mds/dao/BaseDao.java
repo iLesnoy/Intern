@@ -13,5 +13,7 @@ public interface BaseDao<T>{
 
     T update(long id,T t);
 
-    void deleteById(Long id);
+    void deleteById(T t);
+
+    Long findEntityNumber();
 }
