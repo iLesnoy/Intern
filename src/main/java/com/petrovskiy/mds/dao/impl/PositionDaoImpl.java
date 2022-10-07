@@ -16,17 +16,12 @@ import java.util.Optional;
 @Repository
 public class PositionDaoImpl implements PositionDao {
 
+    @PersistenceContext
     private EntityManager entityManager;
-    private CriteriaBuilder cb;
-
-    @Autowired
-    public PositionDaoImpl(EntityManager entityManager) {
-        this.entityManager = entityManager;
-        this.cb = entityManager.getCriteriaBuilder();
-    }
 
     @Override
     public List<Position> findAll(Integer offset, Integer limit) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Position> query = cb.createQuery(Position.class);
         Root<Position> userRoot = query.from(Position.class);
         query.select(userRoot);
@@ -57,6 +52,7 @@ public class PositionDaoImpl implements PositionDao {
 
     @Override
     public Long findEntityNumber() {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> query = cb.createQuery(Long.class);
         Root<Position> root = query.from(Position.class);
         query.select(cb.count(root));

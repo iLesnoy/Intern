@@ -16,17 +16,12 @@ import java.util.Optional;
 @Repository
 public class UserDaoImpl implements UserDao {
 
+    @PersistenceContext
     private EntityManager entityManager;
-    private CriteriaBuilder cb;
-
-    @Autowired
-    public UserDaoImpl(EntityManager entityManager) {
-        this.entityManager = entityManager;
-        this.cb = entityManager.getCriteriaBuilder();
-    }
 
     @Override
     public List<User> findAll(Integer offset, Integer limit) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<User> query = cb.createQuery(User.class);
         Root<User> userRoot = query.from(User.class);
         query.select(userRoot);
@@ -57,6 +52,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Long findEntityNumber() {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> query = cb.createQuery(Long.class);
         Root<User> root = query.from(User.class);
         query.select(cb.count(root));
@@ -65,6 +61,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Optional<User> findByEmail(String email) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<User> query = cb.createQuery(User.class);
         Root<User> root = query.from(User.class);
         query.select(root);

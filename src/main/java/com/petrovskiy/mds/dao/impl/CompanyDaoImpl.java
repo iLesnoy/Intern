@@ -16,17 +16,12 @@ import java.util.Optional;
 @Repository
 public class CompanyDaoImpl implements CompanyDao {
 
+    @PersistenceContext
     private EntityManager entityManager;
-    private CriteriaBuilder cb;
-
-    @Autowired
-    public CompanyDaoImpl(EntityManager entityManager) {
-        this.entityManager = entityManager;
-        this.cb = entityManager.getCriteriaBuilder();
-    }
 
     @Override
     public List<Company> findAll(Integer offset, Integer limit) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Company> query = cb.createQuery(Company.class);
         Root<Company> companyRoot = query.from(Company.class);
         query.select(companyRoot);
@@ -57,6 +52,7 @@ public class CompanyDaoImpl implements CompanyDao {
 
     @Override
     public Long findEntityNumber() {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> query = cb.createQuery(Long.class);
         Root<Company> root = query.from(Company.class);
         query.select(cb.count(root));

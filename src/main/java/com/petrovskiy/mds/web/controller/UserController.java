@@ -1,9 +1,9 @@
 package com.petrovskiy.mds.web.controller;
 
-import com.petrovskiy.mds.service.UserService;
 import com.petrovskiy.mds.service.dto.CustomPage;
 import com.petrovskiy.mds.service.dto.CustomPageable;
 import com.petrovskiy.mds.service.dto.UserDto;
+import com.petrovskiy.mds.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -12,12 +12,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/users")
 public class UserController {
 
-    private UserService userService;
-
     @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+    private UserServiceImpl userService;
+
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

@@ -5,6 +5,7 @@ import com.petrovskiy.mds.service.dto.CustomPage;
 import com.petrovskiy.mds.service.dto.CustomPageable;
 import com.petrovskiy.mds.service.dto.RoleDto;
 import com.petrovskiy.mds.service.dto.UserDto;
+import com.petrovskiy.mds.service.impl.RoleServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class RoleController {
 
     @Autowired
-    private RoleService roleService;
+    private RoleServiceImpl roleService;
 
     @GetMapping
     public CustomPage<RoleDto> findAllRoles(CustomPageable pageable){

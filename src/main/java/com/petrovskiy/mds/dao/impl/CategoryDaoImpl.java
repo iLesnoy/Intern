@@ -18,13 +18,7 @@ public class CategoryDaoImpl implements CategoryDao {
 
     @PersistenceContext
     private EntityManager entityManager;
-    private CriteriaBuilder cb;
 
-    @Autowired
-    public CategoryDaoImpl(EntityManager entityManager) {
-        this.entityManager = entityManager;
-        this.cb = entityManager.getCriteriaBuilder();
-    }
 
     @Override
     public List<Category> findAll(Integer offset, Integer limit) {
@@ -59,6 +53,7 @@ public class CategoryDaoImpl implements CategoryDao {
 
     @Override
     public Long findEntityNumber() {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> query = cb.createQuery(Long.class);
         Root<Category> root = query.from(Category.class);
         query.select(cb.count(root));

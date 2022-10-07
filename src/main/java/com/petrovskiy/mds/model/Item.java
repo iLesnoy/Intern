@@ -4,7 +4,6 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -25,7 +24,8 @@ public class Item {
     @Column(name = "email", nullable = false)
     private LocalDateTime created;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "item_id")
-    private List<Position> positionList;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 
 }

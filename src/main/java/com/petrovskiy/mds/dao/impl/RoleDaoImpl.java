@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -15,17 +16,13 @@ import java.util.Optional;
 @Repository
 public class RoleDaoImpl implements RoleDao {
 
+    @PersistenceContext
     private EntityManager entityManager;
-    private CriteriaBuilder cb;
 
-    @Autowired
-    public RoleDaoImpl(EntityManager entityManager) {
-        this.entityManager = entityManager;
-        this.cb = entityManager.getCriteriaBuilder();
-    }
 
     @Override
     public List<Role> findAll(Integer offset, Integer limit) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Role> query = cb.createQuery(Role.class);
         Root<Role> userRoot = query.from(Role.class);
         query.select(userRoot);
@@ -56,6 +53,7 @@ public class RoleDaoImpl implements RoleDao {
 
     @Override
     public Long findEntityNumber() {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> query = cb.createQuery(Long.class);
         Root<Role> root = query.from(Role.class);
         query.select(cb.count(root));
@@ -64,6 +62,7 @@ public class RoleDaoImpl implements RoleDao {
 
     @Override
     public Optional<Role> findByName(String name) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Role> query = cb.createQuery(Role.class);
         Root<Role> root = query.from(Role.class);
         query.select(root);

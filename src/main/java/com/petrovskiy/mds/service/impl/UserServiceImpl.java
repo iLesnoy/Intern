@@ -1,7 +1,6 @@
 package com.petrovskiy.mds.service.impl;
 
-import com.petrovskiy.mds.dao.RoleDao;
-import com.petrovskiy.mds.dao.UserDao;
+
 import com.petrovskiy.mds.dao.impl.RoleDaoImpl;
 import com.petrovskiy.mds.dao.impl.UserDaoImpl;
 import com.petrovskiy.mds.model.User;
@@ -11,10 +10,12 @@ import com.petrovskiy.mds.service.dto.CustomPageable;
 import com.petrovskiy.mds.service.dto.UserDto;
 import com.petrovskiy.mds.service.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
 
+@Service
 public class UserServiceImpl implements BaseService<UserDto> {
 
     private UserDaoImpl userDao;

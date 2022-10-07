@@ -17,17 +17,12 @@ import java.util.Optional;
 @Repository
 public class ItemDaoImpl implements ItemDao {
 
+    @PersistenceContext
     private EntityManager entityManager;
-    private CriteriaBuilder cb;
-
-    @Autowired
-    public ItemDaoImpl(EntityManager entityManager) {
-        this.entityManager = entityManager;
-        this.cb = entityManager.getCriteriaBuilder();
-    }
 
     @Override
     public List<Item> findAll(Integer offset, Integer limit) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Item> query = cb.createQuery(Item.class);
         Root<Item> itemRoot = query.from(Item.class);
         query.select(itemRoot);
@@ -58,6 +53,7 @@ public class ItemDaoImpl implements ItemDao {
 
     @Override
     public Long findEntityNumber() {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> query = cb.createQuery(Long.class);
         Root<Item> root = query.from(Item.class);
         query.select(cb.count(root));
