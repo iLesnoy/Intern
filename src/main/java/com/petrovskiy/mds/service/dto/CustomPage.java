@@ -9,6 +9,7 @@ import java.util.Collection;
 @Data
 @JsonPropertyOrder({"content", "size", "total-elements", "total-pages", "number"})
 public class CustomPage<T> {
+
     @JsonProperty("content")
     private Collection<T> content;
     @JsonProperty("size")

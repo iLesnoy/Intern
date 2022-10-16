@@ -2,7 +2,6 @@ package com.petrovskiy.mds.dao.impl;
 
 import com.petrovskiy.mds.dao.PositionDao;
 import com.petrovskiy.mds.model.Position;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -10,6 +9,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,12 +36,12 @@ public class PositionDaoImpl implements PositionDao {
     }
 
     @Override
-    public Optional<Position> findById(Long id) {
+    public Optional<Position> findById(BigInteger id) {
         return Optional.ofNullable(entityManager.find(Position.class,id));
     }
 
     @Override
-    public Position update(long id, Position position) {
+    public Position update(BigInteger id, Position position) {
         return entityManager.merge(position);
     }
 

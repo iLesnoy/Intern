@@ -7,6 +7,7 @@ import java.util.Objects;
 
 @Data
 public class CustomPageable {
+
     private static final Integer DEFAULT_SIZE = 1;
     private static final Integer DEFAULT_PAGE = 0;
 

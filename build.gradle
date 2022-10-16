@@ -27,21 +27,22 @@ ext {
 
 dependencies {
 
-    /*implementation 'org.liquibase:liquibase-core'*/
+    implementation 'org.liquibase:liquibase-core'
     implementation 'org.postgresql:postgresql:42.2.10'
     implementation 'org.hibernate:hibernate-validator:8.0.0.Final'
     implementation 'org.springframework.boot:spring-boot-starter-web:2.7.3'
-
     implementation "org.mapstruct:mapstruct:${mapstructVersion}", "org.projectlombok:lombok:${lombokVersion}"
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.2.Final'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.6.6'
 
-
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.2.Final'
     annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.testcontainers:junit-jupiter'
-
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}", "org.projectlombok:lombok:${lombokVersion}", "org.projectlombok:lombok-mapstruct-binding:${lombokMapstructBindingVersion}"
+
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation "org.testcontainers:postgresql:1.17.5"
+    testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: '1.17.3'
+
 
 }
 

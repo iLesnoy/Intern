@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.persistence.*;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Data
@@ -17,22 +18,26 @@ public class Company {
     @Column(name = "id", nullable = false)
     private BigInteger id;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
 
     @Column(name = "email", nullable = false)
     private String email;
 
+    @Column(name = "created", nullable = false)
+    private LocalDateTime created;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "company")
     private List<User> userList;
 
-    @Column(name = "created", nullable = false)
-    private LocalDateTime created;
-
     @Column(name = "description", nullable = false)
     private String description;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "company_id")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "company")
     private List<Position> positionList;
+
+    @PrePersist
+    private void PrePersist(){
+        created = LocalDateTime.parse(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+    }
 }

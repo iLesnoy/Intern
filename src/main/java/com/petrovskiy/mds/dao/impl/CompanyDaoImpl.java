@@ -2,14 +2,15 @@ package com.petrovskiy.mds.dao.impl;
 
 import com.petrovskiy.mds.dao.CompanyDao;
 import com.petrovskiy.mds.model.Company;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +30,7 @@ public class CompanyDaoImpl implements CompanyDao {
         return entityManager.createQuery(query).setFirstResult(offset).setMaxResults(limit).getResultList();
     }
 
+    @Transactional
     @Override
     public Company create(Company company) {
         entityManager.persist(company);
@@ -36,12 +38,12 @@ public class CompanyDaoImpl implements CompanyDao {
     }
 
     @Override
-    public Optional<Company> findById(Long id) {
+    public Optional<Company> findById(BigInteger id) {
         return Optional.ofNullable(entityManager.find(Company.class,id));
     }
 
     @Override
-    public Company update(long id, Company company) {
+    public Company update(BigInteger id, Company company) {
         return entityManager.merge(company);
     }
 
@@ -58,4 +60,15 @@ public class CompanyDaoImpl implements CompanyDao {
         query.select(cb.count(root));
         return entityManager.createQuery(query).getSingleResult();
     }
+
+    @Override
+    public Optional<Company> findByName(String name) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Company> query = cb.createQuery(Company.class);
+        Root<Company> root = query.from(Company.class);
+        query.select(root);
+        query.where(cb.like(root.get("name"),name));
+        return entityManager.createQuery(query).getResultStream().findFirst();
+    }
+
 }

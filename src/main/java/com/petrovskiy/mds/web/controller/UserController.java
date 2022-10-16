@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -18,22 +21,23 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDto create(@RequestBody UserDto userDto) {
-        UserDto created = userService.create(userDto);
-        return created;
+    public UserDto create(@RequestBody @Valid UserDto userDto) {
+        return userService.create(userDto);
     }
 
     @GetMapping("/{id}")
-    public UserDto findById(@PathVariable Long id) {
-        UserDto userDto = userService.findById(id);
-        return userDto;
+    public UserDto findById(@PathVariable UUID id) {
+        return userService.findById(id);
+    }
+
+    @PatchMapping("/{id}")
+    public UserDto update(@PathVariable UUID id, @Valid UserDto userDto){
+        return userService.update(id,userDto);
     }
 
     @GetMapping
     public CustomPage<UserDto> findAll(CustomPageable pageable) {
-        CustomPage<UserDto> userDtos = userService.findAll(pageable);
-        return userDtos;
+        return userService.findAll(pageable);
     }
-
 
 }

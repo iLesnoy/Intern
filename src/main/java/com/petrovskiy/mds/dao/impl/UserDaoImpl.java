@@ -2,7 +2,6 @@ package com.petrovskiy.mds.dao.impl;
 
 import com.petrovskiy.mds.dao.UserDao;
 import com.petrovskiy.mds.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -12,6 +11,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public class UserDaoImpl implements UserDao {
@@ -36,12 +36,12 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public Optional<User> findById(Long id) {
+    public Optional<User> findById(UUID id) {
         return Optional.ofNullable(entityManager.find(User.class,id));
     }
 
     @Override
-    public User update(long id, User user) {
+    public User update(UUID id, User user) {
         return entityManager.merge(user);
     }
 
@@ -66,6 +66,6 @@ public class UserDaoImpl implements UserDao {
         Root<User> root = query.from(User.class);
         query.select(root);
         query.where(cb.like(root.get("email"),email));
-        return entityManager.createQuery(query).getResultStream().findAny();
+        return entityManager.createQuery(query).getResultStream().findFirst();
     }
 }

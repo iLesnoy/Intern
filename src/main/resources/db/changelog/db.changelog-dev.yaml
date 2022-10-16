@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - changeSet:
+      id: upd-varch-size
+      author: Petrovskiy
+      changes:
+        - modifyDataType:
+            columnName: name
+            newDataType: VARCHAR(36)
+            tableName: users
+
+        - modifyDataType:
+            columnName: username
+            newDataType: VARCHAR(36)
+            tableName: users
+
+        - modifyDataType:
+            columnName: email
+            newDataType: VARCHAR(32)
+            tableName: users
+
+
+
+
+
+

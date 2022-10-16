@@ -1,9 +1,7 @@
 package com.petrovskiy.mds.dao.impl;
 
 import com.petrovskiy.mds.dao.ItemDao;
-import com.petrovskiy.mds.model.Company;
 import com.petrovskiy.mds.model.Item;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -13,6 +11,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public class ItemDaoImpl implements ItemDao {
@@ -37,12 +36,12 @@ public class ItemDaoImpl implements ItemDao {
     }
 
     @Override
-    public Optional<Item> findById(Long id) {
+    public Optional<Item> findById(UUID id) {
         return Optional.ofNullable(entityManager.find(Item.class,id));
     }
 
     @Override
-    public Item update(long id, Item item) {
+    public Item update(UUID id, Item item) {
         return entityManager.merge(item);
     }
 
