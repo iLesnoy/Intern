@@ -3,8 +3,7 @@ databaseChangeLog:
       file: db/changelog/db.changelog-init.yaml
   - include:
       file: db/changelog/db.changelog-dev.yaml
- # - include:
- #     file: db/changelog/db.changelog-dev.yaml
+
 
 
 

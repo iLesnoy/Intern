@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.math.BigInteger;
 
 @RestController
@@ -19,13 +20,13 @@ public class CategoryController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CategoryDto create(@RequestBody CategoryDto categoryDto) {
+    public CategoryDto create(@RequestBody @Valid CategoryDto categoryDto) {
         return categoryService.create(categoryDto);
     }
 
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public CategoryDto update(@PathVariable BigInteger id, @RequestBody CategoryDto categoryDto){
+    public CategoryDto update(@PathVariable BigInteger id, @RequestBody @Valid CategoryDto categoryDto){
         return categoryService.update(id,categoryDto);
     }
 
