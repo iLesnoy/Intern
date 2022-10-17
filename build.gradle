@@ -33,12 +33,14 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web:2.7.3'
     implementation "org.mapstruct:mapstruct:${mapstructVersion}", "org.projectlombok:lombok:${lombokVersion}"
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.6.6'
+    implementation 'com.epages:wiremock-spring-boot-starter:0.8.0'
 
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.2.Final'
     annotationProcessor 'org.projectlombok:lombok'
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}", "org.projectlombok:lombok:${lombokVersion}", "org.projectlombok:lombok-mapstruct-binding:${lombokMapstructBindingVersion}"
 
 
+    testImplementation 'io.rest-assured:spring-mock-mvc:5.1.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation "org.testcontainers:postgresql:1.17.5"
     testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: '1.17.3'
