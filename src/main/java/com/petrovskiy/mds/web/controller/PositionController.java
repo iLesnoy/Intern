@@ -25,7 +25,7 @@ public class PositionController {
 
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public PositionDto updateCompany(@PathVariable BigInteger id, @RequestBody PositionDto positionDto){
+    public PositionDto update(@PathVariable BigInteger id, @RequestBody PositionDto positionDto){
         return positionService.update(id,positionDto);
     }
 
@@ -42,7 +42,7 @@ public class PositionController {
 
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteCompany(@PathVariable BigInteger id){
+    public void delete(@PathVariable BigInteger id){
         positionService.delete(id);
     }
 }

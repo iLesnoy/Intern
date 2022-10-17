@@ -26,6 +26,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public UserDto findById(@PathVariable UUID id) {
         return userService.findById(id);
     }

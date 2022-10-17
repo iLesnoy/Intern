@@ -25,7 +25,7 @@ public class CategoryController {
 
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public CategoryDto updateCompany(@PathVariable BigInteger id, @RequestBody CategoryDto categoryDto){
+    public CategoryDto update(@PathVariable BigInteger id, @RequestBody CategoryDto categoryDto){
         return categoryService.update(id,categoryDto);
     }
 
@@ -41,7 +41,7 @@ public class CategoryController {
 
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteCompany(@PathVariable BigInteger id){
+    public void delete(@PathVariable BigInteger id){
         categoryService.delete(id);
     }
 }

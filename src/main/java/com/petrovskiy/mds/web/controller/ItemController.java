@@ -25,7 +25,7 @@ public class ItemController {
 
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ItemDto updateCompany(@PathVariable UUID id, @RequestBody ItemDto itemDto){
+    public ItemDto update(@PathVariable UUID id, @RequestBody ItemDto itemDto){
         return itemService.update(id,itemDto);
     }
 
@@ -41,7 +41,7 @@ public class ItemController {
 
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteCompany(@PathVariable UUID id){
+    public void delete(@PathVariable UUID id){
         itemService.delete(id);
     }
 }
