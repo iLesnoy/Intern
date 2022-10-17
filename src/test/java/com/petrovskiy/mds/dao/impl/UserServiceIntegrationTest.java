@@ -6,13 +6,15 @@ import com.petrovskiy.mds.service.dto.CustomPageable;
 import com.petrovskiy.mds.service.dto.UserDto;
 import com.petrovskiy.mds.service.exception.SystemException;
 import com.petrovskiy.mds.service.impl.UserServiceImpl;
+import org.junit.ClassRule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.TransactionSystemException;
+import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.math.BigInteger;
 import java.util.UUID;
@@ -20,10 +22,12 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-@ActiveProfiles("test")
-@AutoConfigureMockMvc
+@RunWith(SpringRunner.class)
 @SpringBootTest
-class UserServiceIntegrationTest extends AbstractContainerBaseTest {
+class UserServiceIntegrationTest {
+
+    @ClassRule
+    public static PostgreSQLContainer postgreSQLContainer = PostgreTestContainer.getInstance();
 
     @Autowired
     private UserServiceImpl userService;
