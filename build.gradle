@@ -2,11 +2,12 @@ plugins {
     id 'org.springframework.boot' version '2.6.6'
     id 'io.spring.dependency-management' version '1.0.14.RELEASE'
     id 'java'
+    id 'jacoco'
 }
 
 group = 'com.petrovskiy.mds'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
+sourceCompatibility = '16'
 
 configurations {
     compileOnly {
@@ -32,8 +33,11 @@ dependencies {
     implementation 'org.hibernate:hibernate-validator:8.0.0.Final'
     implementation 'org.springframework.boot:spring-boot-starter-web:2.7.3'
     implementation "org.mapstruct:mapstruct:${mapstructVersion}", "org.projectlombok:lombok:${lombokVersion}"
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.6.6'
     implementation 'com.epages:wiremock-spring-boot-starter:0.8.0'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+
+    implementation 'org.keycloak:keycloak-spring-boot-starter'
 
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.2.Final'
     annotationProcessor 'org.projectlombok:lombok'
@@ -51,10 +55,28 @@ dependencies {
 dependencyManagement {
     imports {
         mavenBom "org.testcontainers:testcontainers-bom:${testcontainersVersion}"
+        mavenBom "org.keycloak.bom:keycloak-adapter-bom:4.6.0.Final"
     }
+
 }
 
-
+test {
+    finalizedBy jacocoTestReport // report is always generated after tests run
+}
+jacocoTestReport {
+    dependsOn test // tests are required to run before generating the report
+}
+jacoco {
+    toolVersion = "0.8.8"
+    reportsDirectory = layout.buildDirectory.dir('customJacocoReportDir')
+}
+jacocoTestReport {
+    reports {
+        xml.required = false
+        csv.required = false
+        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+    }
+}
 
 tasks.named('test') {
     useJUnitPlatform()
