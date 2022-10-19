@@ -9,13 +9,13 @@ import java.math.BigInteger;
 import java.time.LocalDateTime;
 
 @Data
-@JsonPropertyOrder({"id", "created_by","created","amount", "item","company"})
+@JsonPropertyOrder({"id", "createdBy","created","amount", "item","company"})
 public class PositionDto {
 
     @JsonProperty("id")
     private BigInteger id;
 
-    @JsonProperty("created_by")
+    @JsonProperty("createdBy")
     private String created_by;
 
     @JsonProperty("created")

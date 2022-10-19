@@ -7,16 +7,16 @@ import lombok.Data;
 import java.util.Collection;
 
 @Data
-@JsonPropertyOrder({"content", "size", "total_elements", "total_pages", "number"})
+@JsonPropertyOrder({"content", "size", "totalElements", "totalPages", "number"})
 public class CustomPage<T> {
 
     @JsonProperty("content")
     private Collection<T> content;
     @JsonProperty("size")
     private Integer size;
-    @JsonProperty("total_elements")
+    @JsonProperty("totalElements")
     private Long totalElements;
-    @JsonProperty("total_pages")
+    @JsonProperty("totalPages")
     private Long totalPages;
     @JsonProperty("number")
     private Integer number;
