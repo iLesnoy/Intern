@@ -34,7 +34,6 @@ public class ItemServiceImpl implements ItemService {
     }
 
 
-                         /*TODO add duplicate check*/
     @Transactional
     @Override
     public ItemDto create(ItemDto itemDto) {

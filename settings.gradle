@@ -1,1 +1,5 @@
 rootProject.name = 'Intern'
+
+includeBuild("company-api")
+includeBuild("user-api")
+includeBuild("items-api")
