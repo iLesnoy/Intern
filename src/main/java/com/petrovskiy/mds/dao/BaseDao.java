@@ -3,15 +3,17 @@ package com.petrovskiy.mds.dao;
 import java.util.List;
 import java.util.Optional;
 
-public interface BaseDao<T>{
-
-    List<T> findAll(Integer offset, Integer limit);
+public interface BaseDao<T,B>{
 
     T create(T t);
 
-    Optional<T> findById(Long id);
+    T update(B id,T t);
 
-    T update(long id,T t);
+    Optional<T> findById(B id);
 
-    void deleteById(Long id);
+    List<T> findAll(Integer offset, Integer limit);
+
+    void deleteById(T t);
+
+    Long findEntityNumber();
 }
