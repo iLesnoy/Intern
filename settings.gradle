@@ -1,5 +1,3 @@
 rootProject.name = 'Intern'
-
-includeBuild("company-api")
-includeBuild("user-api")
-includeBuild("items-api")
+include('api-gateway', 'company-api', 'eureka-server'
+        ,'items-api','user-api')
