@@ -1,0 +1,40 @@
+plugins {
+    id 'org.springframework.boot' version '2.6.6'
+    id 'io.spring.dependency-management' version '1.0.14.RELEASE'
+    id 'java'
+}
+
+group = 'com.petrovskiy.mds'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext{
+    mapstructVersion = "1.5.2.Final"
+    lombokVersion = "1.18.20"
+    lombokMapstructBindingVersion = "0.2.0"
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web-services'
+    implementation 'org.hibernate:hibernate-validator:8.0.0.Final'
+    implementation 'org.hibernate:hibernate-core:6.1.2.Final'
+
+    implementation "org.mapstruct:mapstruct:${mapstructVersion}", "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    /*implementation project(':shared')*/
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
