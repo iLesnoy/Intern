@@ -1,16 +1,20 @@
 package com.petrovskiy.mds.model;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
+@Builder
 @Entity
 @Table(name = "users")
 public class User {
@@ -37,9 +41,8 @@ public class User {
     @Column(name = "role_id", nullable = false)
     private Role role;
 
-    @ManyToOne
     @JoinColumn(name = "company_id")
-    private Company company;
+    private Long companyId;
 
     @Column(name = "created", nullable = false)
     private LocalDateTime created;

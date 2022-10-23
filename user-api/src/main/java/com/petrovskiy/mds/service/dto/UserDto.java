@@ -3,13 +3,16 @@ package com.petrovskiy.mds.service.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.petrovskiy.mds.model.Role;
+import lombok.Builder;
 import lombok.Data;
 
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
-@JsonPropertyOrder({"id", "name","username", "role","created","companyDto","updated","email"})
+@Builder
+@JsonPropertyOrder({"id", "name","username", "role","created","company","updated","email"})
 public class UserDto {
 
     @JsonProperty("id")

@@ -1,10 +1,10 @@
 package com.petrovskiy.mds.web.controller;
 
-import com.petrovskiy.mds.service.dto.CustomPage;
-import com.petrovskiy.mds.service.dto.CustomPageable;
 import com.petrovskiy.mds.service.dto.UserDto;
 import com.petrovskiy.mds.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +37,7 @@ public class UserController {
     }
 
     @GetMapping
-    public CustomPage<UserDto> findAll(CustomPageable pageable) {
+    public Page<UserDto> findAll(Pageable pageable) {
         return userService.findAll(pageable);
     }
 
