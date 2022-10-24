@@ -1,0 +1,26 @@
+version: '1'
+services:
+  eureka-server:
+    build: ./eureka-server
+    image:
+    ports:
+      - "8761:8761"
+  spring-cloud-gateway-service:
+    build: ./api--gateway
+    image:
+    ports:
+      - "9500:9500"
+    depends_on:
+        -
+        -
+        -
+    environment:
+      SPRING_PROFILES_ACTIVE: path
+      SPRING_CLOUD_GATEWAY_ROUTES[0]_URI: http://:9501
+      SPRING_CLOUD_GATEWAY_ROUTES[0]_ID:
+      SPRING_CLOUD_GATEWAY_ROUTES[0]_PREDICATES[0]: Path= //*
+      SPRING_CLOUD_GATEWAY_ROUTES[0]_FILTERS[0]: StripPrefix=1
+      SPRING_CLOUD_GATEWAY_ROUTES[1]_URI: http://:9502
+      SPRING_CLOUD_GATEWAY_ROUTES[1]_ID:
+      SPRING_CLOUD_GATEWAY_ROUTES[1]_PREDICATES[0]: Path= //*
+      SPRING_CLOUD_GATEWAY_ROUTES[1]_FILTERS[0]: StripPrefix=1
