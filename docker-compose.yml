@@ -2,25 +2,56 @@ version: '1'
 services:
   eureka-server:
     build: ./eureka-server
-    image:
+    image: test/eureka-server
     ports:
       - "8761:8761"
+  jio-microservice:
+    build: ./company-api
+    image: test/company-api
+    ports:
+      - "9501:9501"
+  airtel-microservice:
+    build: ./user-api
+    image: test/user-api
+    ports:
+      - "9502:9502"
+  vodaphone-microservice:
+    build: ./items-api
+    image: test/items-api
+    ports:
+      - "9503:9503"
   spring-cloud-gateway-service:
-    build: ./api--gateway
-    image:
+    build: ./api-gateway
+    image: test/api-gateway
     ports:
       - "9500:9500"
     depends_on:
-        -
-        -
-        -
+      - company-micro
+      - user-micro
+      - items-micro
     environment:
       SPRING_PROFILES_ACTIVE: path
-      SPRING_CLOUD_GATEWAY_ROUTES[0]_URI: http://:9501
-      SPRING_CLOUD_GATEWAY_ROUTES[0]_ID:
-      SPRING_CLOUD_GATEWAY_ROUTES[0]_PREDICATES[0]: Path= //*
+      SPRING_CLOUD_GATEWAY_ROUTES[0]_URI: http://company-micro:9501
+      SPRING_CLOUD_GATEWAY_ROUTES[0]_ID: company-service
+      SPRING_CLOUD_GATEWAY_ROUTES[0]_PREDICATES[0]: Path=Path=/api/companies/**
       SPRING_CLOUD_GATEWAY_ROUTES[0]_FILTERS[0]: StripPrefix=1
-      SPRING_CLOUD_GATEWAY_ROUTES[1]_URI: http://:9502
-      SPRING_CLOUD_GATEWAY_ROUTES[1]_ID:
-      SPRING_CLOUD_GATEWAY_ROUTES[1]_PREDICATES[0]: Path= //*
+
+      SPRING_CLOUD_GATEWAY_ROUTES[1]_URI: http://company-micro:9501
+      SPRING_CLOUD_GATEWAY_ROUTES[1]_ID: company-service
+      SPRING_CLOUD_GATEWAY_ROUTES[1]_PREDICATES[0]: Path=Path=/api/positions/**
       SPRING_CLOUD_GATEWAY_ROUTES[1]_FILTERS[0]: StripPrefix=1
+
+      SPRING_CLOUD_GATEWAY_ROUTES[2]_URI: http://item-micro:9503
+      SPRING_CLOUD_GATEWAY_ROUTES[2]_ID: items-service
+      SPRING_CLOUD_GATEWAY_ROUTES[2]_PREDICATES[0]: Path=/api/items/**
+      SPRING_CLOUD_GATEWAY_ROUTES[2]_FILTERS[0]: StripPrefix=1
+
+      SPRING_CLOUD_GATEWAY_ROUTES[3]_URI: http://items-micro:9503
+      SPRING_CLOUD_GATEWAY_ROUTES[3]_ID: vodaphone-service
+      SPRING_CLOUD_GATEWAY_ROUTES[3]_PREDICATES[0]: Path=/api/category/**
+      SPRING_CLOUD_GATEWAY_ROUTES[3]_FILTERS[0]: StripPrefix=1
+
+      SPRING_CLOUD_GATEWAY_ROUTES[4]_URI: http://user-micro:9502
+      SPRING_CLOUD_GATEWAY_ROUTES[4]_ID: user-service
+      SPRING_CLOUD_GATEWAY_ROUTES[4]_PREDICATES[0]: Path=/api/users/**
+      SPRING_CLOUD_GATEWAY_ROUTES[4]_FILTERS[0]: StripPrefix=1
