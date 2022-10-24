@@ -44,17 +44,10 @@ public class PositionServiceImpl implements PositionService {
         ItemDto itemDto = itemService.findById(positionDto.getItemDto().getId());
         CompanyDto companyDto = companyService.findById(positionDto.getCompanyDto().getId());
 
-        setDataToNewPosition(positionDto,itemDto,companyDto);
-
         Position position  =  positionDao.save(positionMapper.dtoToEntity(positionDto));
         return positionMapper.entityToDto(position,itemDto,companyDto);
     }
 
-    private void setDataToNewPosition(PositionDto positionDto, ItemDto itemDto,
-                                      CompanyDto companyDto){
-        positionDto.setItemDto(itemDto);
-        positionDto.setCompanyDto(companyDto);
-    }
 
     @Transactional
     @Override
