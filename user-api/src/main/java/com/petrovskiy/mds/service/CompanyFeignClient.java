@@ -14,7 +14,14 @@ public interface CompanyFeignClient {
     @RequestMapping(method = RequestMethod.GET, value = "/companies")
     List<CompanyDto> getCompanies();
 
+    @HystrixCommand(fallbackMethod = "findByIdTest", commandProperties = {
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000")
+    })
     @RequestMapping(method = RequestMethod.GET, value = "/companies/{id}", produces = "application/json")
     CompanyDto findById(@PathVariable Long id);
+
+    @RequestMapping(method = RequestMethod.GET, value = "/companies/{id}", produces = "application/json")
+    CompanyDto findByIdTest(@PathVariable Long id);
+
 
 }

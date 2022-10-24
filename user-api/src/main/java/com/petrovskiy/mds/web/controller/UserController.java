@@ -3,6 +3,7 @@ package com.petrovskiy.mds.web.controller;
 import com.petrovskiy.mds.service.dto.UserDto;
 import com.petrovskiy.mds.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.UUID;
 
+@EnableCircuitBreaker
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
