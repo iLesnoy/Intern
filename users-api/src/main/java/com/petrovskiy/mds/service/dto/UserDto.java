@@ -6,7 +6,6 @@ import com.petrovskiy.mds.model.Role;
 import lombok.Builder;
 import lombok.Data;
 
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
