@@ -1,57 +1,73 @@
-version: '1'
+version: '3'
+
 services:
-  eureka-server:
-    build: ./eureka-server
-    image: test/eureka-server
+  db:
+    image: 'postgres:13.1-alpine'
+    container_name: postgre_db
     ports:
-      - "8761:8761"
-  jio-microservice:
-    build: ./company-api
-    image: test/company-api
-    ports:
-      - "9501:9501"
-  airtel-microservice:
-    build: ./user-api
-    image: test/user-api
-    ports:
-      - "9502:9502"
-  vodaphone-microservice:
-    build: ./items-api
-    image: test/items-api
-    ports:
-      - "9503:9503"
-  spring-cloud-gateway-service:
-    build: ./api-gateway
-    image: test/api-gateway
-    ports:
-      - "9500:9500"
-    depends_on:
-      - company-micro
-      - user-micro
-      - items-micro
+      - "5432:5432"
     environment:
-      SPRING_PROFILES_ACTIVE: path
-      SPRING_CLOUD_GATEWAY_ROUTES[0]_URI: http://company-micro:9501
-      SPRING_CLOUD_GATEWAY_ROUTES[0]_ID: company-service
-      SPRING_CLOUD_GATEWAY_ROUTES[0]_PREDICATES[0]: Path=Path=/api/companies/**
-      SPRING_CLOUD_GATEWAY_ROUTES[0]_FILTERS[0]: StripPrefix=1
+      - POSTGRES_DB=agreg
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=12345
 
-      SPRING_CLOUD_GATEWAY_ROUTES[1]_URI: http://company-micro:9501
-      SPRING_CLOUD_GATEWAY_ROUTES[1]_ID: company-service
-      SPRING_CLOUD_GATEWAY_ROUTES[1]_PREDICATES[0]: Path=Path=/api/positions/**
-      SPRING_CLOUD_GATEWAY_ROUTES[1]_FILTERS[0]: StripPrefix=1
+eureka-server:
+  image: 'eureka-server:latest'
+  build: ./
+  ports:
+    - "8761:8761"
+  container_name: eureka-server
 
-      SPRING_CLOUD_GATEWAY_ROUTES[2]_URI: http://item-micro:9503
-      SPRING_CLOUD_GATEWAY_ROUTES[2]_ID: items-service
-      SPRING_CLOUD_GATEWAY_ROUTES[2]_PREDICATES[0]: Path=/api/items/**
-      SPRING_CLOUD_GATEWAY_ROUTES[2]_FILTERS[0]: StripPrefix=1
+api-gateway:
+  image: 'api-gateway:latest'
+  build: ./
+  ports:
+    - "8765:8765"
+  container_name: api-gateway
+  depends_on:
+    - eureka-server
+  environment:
+    - EUREKA_URI=http://localhost:8761/eureka
 
-      SPRING_CLOUD_GATEWAY_ROUTES[3]_URI: http://items-micro:9503
-      SPRING_CLOUD_GATEWAY_ROUTES[3]_ID: vodaphone-service
-      SPRING_CLOUD_GATEWAY_ROUTES[3]_PREDICATES[0]: Path=/api/category/**
-      SPRING_CLOUD_GATEWAY_ROUTES[3]_FILTERS[0]: StripPrefix=1
+company-api:
+  image: 'company-api:latest'
+  build: ./
+  ports:
+    - "8081:8081"
+  container_name: company-api
+  depends_on:
+    - eureka-server
+    - gateway
+    - db
+  environment:
+    - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/agreg?currentSchema=company
+    - SPRING_DATASOURCE_USERNAME=root
+    - SPRING_DATASOURCE_PASSWORD=12345
 
-      SPRING_CLOUD_GATEWAY_ROUTES[4]_URI: http://user-micro:9502
-      SPRING_CLOUD_GATEWAY_ROUTES[4]_ID: user-service
-      SPRING_CLOUD_GATEWAY_ROUTES[4]_PREDICATES[0]: Path=/api/users/**
-      SPRING_CLOUD_GATEWAY_ROUTES[4]_FILTERS[0]: StripPrefix=1
+api-users:
+  image: 'users-api:latest'
+  build: ./
+  ports:
+    - "8082:8082"
+  container_name: users-api
+  depends_on:
+    - company-api
+  environment:
+    - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/agreg?currentSchema=users
+    - SPRING_DATASOURCE_USERNAME=root
+    - SPRING_DATASOURCE_PASSWORD=12345
+
+items-api:
+  image: 'itema-api:latest'
+  build: ./
+  ports:
+    - "8083:8083"
+  container_name: itema-api
+  depends_on:
+    - company-api
+  environment:
+    - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/agreg?currentSchema=item
+    - SPRING_DATASOURCE_USERNAME=root
+    - SPRING_DATASOURCE_PASSWORD=12345
+
+
