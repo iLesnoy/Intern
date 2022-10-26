@@ -10,6 +10,7 @@ import com.petrovskiy.mds.service.dto.ItemDto;
 import com.petrovskiy.mds.service.dto.PositionDto;
 import com.petrovskiy.mds.service.exception.SystemException;
 import com.petrovskiy.mds.service.mapper.PositionMapper;
+import com.petrovskiy.mds.service.validation.PageValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigInteger;
 
 import static com.petrovskiy.mds.service.exception.ExceptionCode.NON_EXISTENT_ENTITY;
+import static com.petrovskiy.mds.service.exception.ExceptionCode.NON_EXISTENT_PAGE;
 
 @Service
 public class PositionServiceImpl implements PositionService {
@@ -27,14 +29,17 @@ public class PositionServiceImpl implements PositionService {
     private final PositionMapper positionMapper;
     private final ItemFeignClient itemService;
     private final CompanyServiceImpl companyService;
+    private final PageValidation validation;
 
     @Autowired
     public PositionServiceImpl(PositionDao positionDao, PositionMapper positionMapper,
-                               ItemFeignClient itemService,CompanyServiceImpl companyService) {
+                               ItemFeignClient itemService,CompanyServiceImpl companyService,
+                               PageValidation validation) {
         this.positionDao = positionDao;
         this.positionMapper = positionMapper;
         this.itemService = itemService;
         this.companyService = companyService;
+        this.validation = validation;
     }
 
 
@@ -71,9 +76,9 @@ public class PositionServiceImpl implements PositionService {
     @Override
     public Page<PositionDto> findAll(Pageable pageable) {
         Page<Position> orderPage = positionDao.findAll(pageable);
-        /*if(!validator.isPageExists(pageable,orderPage.getTotalElements())){
+        if(!validation.isPageExists(pageable,orderPage.getTotalElements())){
             throw new SystemException(NON_EXISTENT_PAGE);
-        }*/
+        }
         return new CustomPage<>(orderPage.getContent(), orderPage.getPageable(), orderPage.getTotalElements())
                 .map(position -> {
                     ItemDto itemDto = itemService.findById(position.getItemId());

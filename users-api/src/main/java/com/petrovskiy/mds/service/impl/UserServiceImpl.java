@@ -11,6 +11,7 @@ import com.petrovskiy.mds.service.dto.CustomPage;
 import com.petrovskiy.mds.service.dto.UserDto;
 import com.petrovskiy.mds.service.exception.SystemException;
 import com.petrovskiy.mds.service.mapper.UserMapper;
+import com.petrovskiy.mds.service.validator.PageValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,8 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
-import static com.petrovskiy.mds.service.exception.ExceptionCode.DUPLICATE_NAME;
-import static com.petrovskiy.mds.service.exception.ExceptionCode.NON_EXISTENT_ENTITY;
+import static com.petrovskiy.mds.service.exception.ExceptionCode.*;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -28,12 +28,15 @@ public class UserServiceImpl implements UserService {
     private final UserDao userDao;
     private final UserMapper userMapper;
     private final CompanyFeignClient companyService;
+    private final PageValidation validator;
 
     @Autowired
-    public UserServiceImpl(UserDao userDao, UserMapper userMapper, CompanyFeignClient companyService) {
+    public UserServiceImpl(UserDao userDao, UserMapper userMapper,
+                           CompanyFeignClient companyService, PageValidation validator) {
         this.userDao = userDao;
         this.userMapper = userMapper;
         this.companyService = companyService;
+        this.validator = validator;
     }
 
     @Transactional
@@ -70,9 +73,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<UserDto> findAll(Pageable pageable) {
         Page<User> orderPage = userDao.findAll(pageable);
-        /*if(!validator.isPageExists(pageable,orderPage.getTotalElements())){
+        if(!validator.isPageExists(pageable,orderPage.getTotalElements())){
             throw new SystemException(NON_EXISTENT_PAGE);
-        }*/
+        }
         return new CustomPage<>(orderPage.getContent(), orderPage.getPageable(), orderPage.getTotalElements())
                 .map(user -> {
                     CompanyDto companyDto = companyService.findById(user.getCompanyId());

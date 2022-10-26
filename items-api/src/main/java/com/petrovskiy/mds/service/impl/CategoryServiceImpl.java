@@ -7,6 +7,7 @@ import com.petrovskiy.mds.service.dto.CategoryDto;
 import com.petrovskiy.mds.service.dto.CustomPage;
 import com.petrovskiy.mds.service.exception.SystemException;
 import com.petrovskiy.mds.service.mapper.CategoryMapper;
+import com.petrovskiy.mds.service.validation.PageValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,19 +16,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
 
-import static com.petrovskiy.mds.service.exception.ExceptionCode.DUPLICATE_NAME;
-import static com.petrovskiy.mds.service.exception.ExceptionCode.NON_EXISTENT_ENTITY;
+import static com.petrovskiy.mds.service.exception.ExceptionCode.*;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryDao categoryDao;
     private final CategoryMapper categoryMapper;
+    private final PageValidation validation;
 
     @Autowired
-    public CategoryServiceImpl(CategoryDao categoryDao, CategoryMapper categoryMapper) {
+    public CategoryServiceImpl(CategoryDao categoryDao, CategoryMapper categoryMapper,
+                               PageValidation validation) {
         this.categoryDao = categoryDao;
         this.categoryMapper = categoryMapper;
+        this.validation = validation;
     }
 
     @Transactional
@@ -56,9 +59,9 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Page<CategoryDto> findAll(Pageable pageable) {
         Page<Category> orderPage = categoryDao.findAll(pageable);
-        /*if(!validator.isPageExists(pageable,orderPage.getTotalElements())){
+        if(!validation.isPageExists(pageable,orderPage.getTotalElements())){
             throw new SystemException(NON_EXISTENT_PAGE);
-        }*/
+        }
         return new CustomPage<>(orderPage.getContent(), orderPage.getPageable(), orderPage.getTotalElements())
                 .map(categoryMapper::entityToDto);
     }

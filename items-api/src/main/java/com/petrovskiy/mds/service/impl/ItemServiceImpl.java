@@ -8,6 +8,7 @@ import com.petrovskiy.mds.service.dto.CustomPage;
 import com.petrovskiy.mds.service.dto.ItemDto;
 import com.petrovskiy.mds.service.exception.SystemException;
 import com.petrovskiy.mds.service.mapper.ItemMapper;
+import com.petrovskiy.mds.service.validation.PageValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.UUID;
 
 import static com.petrovskiy.mds.service.exception.ExceptionCode.NON_EXISTENT_ENTITY;
+import static com.petrovskiy.mds.service.exception.ExceptionCode.NON_EXISTENT_PAGE;
 
 @Service
 public class ItemServiceImpl implements ItemService {
@@ -24,13 +26,15 @@ public class ItemServiceImpl implements ItemService {
     private final ItemDao itemDao;
     private final ItemMapper itemMapper;
     private final CategoryServiceImpl categoryService;
+    private final PageValidation validation;
 
     @Autowired
     public ItemServiceImpl(ItemDao itemDao, ItemMapper itemMapper,
-                           CategoryServiceImpl categoryService) {
+                           CategoryServiceImpl categoryService,PageValidation validation) {
         this.itemDao = itemDao;
         this.itemMapper = itemMapper;
         this.categoryService = categoryService;
+        this.validation = validation;
     }
 
 
@@ -63,9 +67,9 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public Page<ItemDto> findAll(Pageable pageable) {
         Page<Item> orderPage = itemDao.findAll(pageable);
-        /*if(!validator.isPageExists(pageable,orderPage.getTotalElements())){
+        if(!validation.isPageExists(pageable,orderPage.getTotalElements())){
             throw new SystemException(NON_EXISTENT_PAGE);
-        }*/
+        }
         return new CustomPage<>(orderPage.getContent(), orderPage.getPageable(), orderPage.getTotalElements())
                 .map(itemMapper::entityToDto);
     }
