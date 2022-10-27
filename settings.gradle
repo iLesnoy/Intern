@@ -1,6 +1,8 @@
 rootProject.name = 'Intern'
+
 include('api-gateway')
 include('company-api')
 include('eureka-server')
 include('items-api')
 include('users-api')
+
