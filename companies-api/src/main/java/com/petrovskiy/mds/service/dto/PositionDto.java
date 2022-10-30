@@ -2,7 +2,6 @@ package com.petrovskiy.mds.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.petrovskiy.mds.service.dto.CompanyDto;
 import lombok.Data;
 
 import java.math.BigDecimal;

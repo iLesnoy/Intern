@@ -1,7 +1,6 @@
-package com.petrovskiy.mds.web.controller;
+package com.petrovskiy.mds.controller;
 
 import com.petrovskiy.mds.service.dto.CompanyDto;
-import com.petrovskiy.mds.service.dto.CustomPage;
 import com.petrovskiy.mds.service.impl.CompanyServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

@@ -1,7 +1,5 @@
 package com.petrovskiy.mds.service;
 
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import com.petrovskiy.mds.service.dto.CompanyDto;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -18,15 +16,9 @@ public interface CompanyFeignClient {
     @RequestMapping(method = RequestMethod.GET, value = "/companies")
     List<CompanyDto> getCompanies();
 
-    @HystrixCommand(fallbackMethod = "findByIdTest", commandProperties = {
-            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1")
-    })
+
     @RequestMapping(method = RequestMethod.GET, value = "/companies/{id}", produces = "application/json")
     CompanyDto findById(@PathVariable Long id);
-
-
-    @RequestMapping(method = RequestMethod.GET, value = "/companies/2", produces = "application/json")
-    CompanyDto findByIdTest(@PathVariable Long id);
 
 
 }

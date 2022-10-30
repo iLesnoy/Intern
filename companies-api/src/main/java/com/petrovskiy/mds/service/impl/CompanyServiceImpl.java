@@ -3,7 +3,6 @@ package com.petrovskiy.mds.service.impl;
 import com.petrovskiy.mds.dao.CompanyDao;
 import com.petrovskiy.mds.model.Company;
 import com.petrovskiy.mds.service.CompanyService;
-import com.petrovskiy.mds.service.PositionService;
 import com.petrovskiy.mds.service.dto.CompanyDto;
 import com.petrovskiy.mds.service.dto.CustomPage;
 import com.petrovskiy.mds.service.exception.SystemException;

@@ -5,8 +5,6 @@ import lombok.Data;
 import javax.persistence.*;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 @Data
 @Entity
@@ -27,19 +25,12 @@ public class Company {
     @Column(name = "created", nullable = false)
     private LocalDateTime created;
 
-    /*@OneToMany(fetch = FetchType.LAZY, mappedBy = "company")
-    private List<User> userList;*/
-    /*@JoinColumn(name = "user_id")
-    private Long userId;
-*/
     @Column(name = "description", nullable = false)
     private String description;
 
-    /*@OneToMany(fetch = FetchType.LAZY, mappedBy = "company")
-    private List<Position> positionList;*/
 
     @PrePersist
     private void PrePersist(){
-        created = LocalDateTime.parse(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        created = LocalDateTime.now();
     }
 }
