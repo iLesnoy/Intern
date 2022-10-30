@@ -1,4 +1,4 @@
-package com.petrovskiy.mds.web.controller;
+package com.petrovskiy.mds.controller;
 
 import com.petrovskiy.mds.service.ItemService;
 import com.petrovskiy.mds.service.dto.ItemDto;

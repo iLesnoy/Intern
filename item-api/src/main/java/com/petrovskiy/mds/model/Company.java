@@ -5,8 +5,7 @@ import lombok.Data;
 import javax.persistence.*;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
+
 
 @Data
 @Entity
@@ -32,6 +31,6 @@ public class Company {
 
     @PrePersist
     private void PrePersist(){
-        created = LocalDateTime.parse(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        created = LocalDateTime.now();
     }
 }
