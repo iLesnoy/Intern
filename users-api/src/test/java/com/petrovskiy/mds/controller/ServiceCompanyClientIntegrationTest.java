@@ -40,11 +40,11 @@ public class ServiceCompanyClientIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        await().atMost(60, SECONDS).until(() -> eurekaClient.getApplications().size() > 0);
+        await().atMost(10, SECONDS).until(() -> eurekaClient.getApplications().size() > 0);
     }
 
     @Test
-    public void whenGetBooks_thenTheCorrectBooksAreReturned() {
+    public void whenGetCompanies_thenTheCorrectBooksAreReturned() {
         List companies = companyClient.getCompanies();
 
         assertEquals(5, companies.size());

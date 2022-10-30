@@ -55,13 +55,13 @@ public class User {
 
     @PrePersist
     private void PrePersist(){
-        created = LocalDateTime.parse(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        created = LocalDateTime.now();
         updated = created;
     }
 
     @PreUpdate
     public void preUpdate() {
-        updated = LocalDateTime.parse(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        updated = LocalDateTime.now();
     }
 
 }

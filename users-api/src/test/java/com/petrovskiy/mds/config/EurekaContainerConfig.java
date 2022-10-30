@@ -18,7 +18,7 @@ public class EurekaContainerConfig {
     public static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
         public static GenericContainer eurekaServer
-                = new GenericContainer("springcloud/eureka")
+                = new GenericContainer("eureka-server/latest")
                 .withExposedPorts(8761);
 
         @Override

@@ -22,12 +22,12 @@ public class RibbonConfigurationTest {
     private WireMockServer secondMockCompService;
 
     @Bean(name = "mockCompService", initMethod = "start", destroyMethod = "stop")
-    public WireMockServer mockBooksService() {
+    public WireMockServer mockCompaniesService() {
         return new WireMockServer(options().dynamicPort());
     }
 
     @Bean(name = "secondMockCompService", initMethod = "start", destroyMethod = "stop")
-    public WireMockServer secondBooksMockService() {
+    public WireMockServer secondCompaniesMockService() {
         return new WireMockServer(options().dynamicPort());
     }
 

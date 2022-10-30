@@ -1,6 +1,9 @@
 package com.petrovskiy.mds.web.controller;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import com.petrovskiy.mds.service.dto.UserDto;
+import com.petrovskiy.mds.service.exception.SystemException;
 import com.petrovskiy.mds.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,11 +29,19 @@ public class UserController {
         return userService.create(userDto);
     }
 
+    @HystrixCommand(fallbackMethod = "findByIdTest")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public UserDto findById(@PathVariable UUID id) {
         return userService.findById(id);
     }
+
+    @GetMapping("/reserved/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public UserDto findByIdHystrix() {
+        return userService.findById(UUID.fromString("ab7148c3-3226-4324-924f-05b5630f55c8"));
+    }
+
 
     @PatchMapping("/{id}")
     public UserDto update(@PathVariable UUID id, @Valid UserDto userDto){

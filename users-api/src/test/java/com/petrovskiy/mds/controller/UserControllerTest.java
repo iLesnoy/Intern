@@ -66,25 +66,19 @@ class UserControllerTest {
 
     @Test
     void findByIdHystrixCompany() {
+        companyDto = new CompanyDto();
         companyDto.setName("comp");
         companyDto.setId(2L);
         companyDto.setEmail("rew@fds.com");
-        userDto = UserDto.builder().id(UUID.fromString("bca0d2f3-57f8-449f-84b7-1dc50e3ee19d")).email("gf@gmail.com").name("fdsgfd")
-                .username("we1").updated(LocalDateTime.parse("2022-10-16 18:41:22.495227")).companyDto(companyDto).build();
+        userDto = UserDto.builder().id(UUID.fromString("ab7148c3-3226-4324-924f-05b5630f55c8")).email("gf@gmail.com").name("fdsgfd")
+                .username("we1").companyDto(companyDto).build();
         wireMockServer.stubFor(
-                WireMock.get(WireMock.urlEqualTo("/api/users/bca0d2f3-57f8-449f-84b7-1dc50e3ee19d"))
+                WireMock.get(WireMock.urlEqualTo("/api/users/bca0d2f3-57f8-449f-84b7-0000000000"))
                         .willReturn(aResponse()
                                 .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
                                 .withBody(String.valueOf(userDto))
                                 .withBodyFile("todo-api/response-200.json"))
         );
-
-        this.webTestClient
-                .patch()
-                .uri("/api/users/bca0d2f3-57f8-449f-84b7-1dc50e3ee19d\"")
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody().jsonPath("$.length()").isEqualTo(1);
     }
 
 
