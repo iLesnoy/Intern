@@ -1,12 +1,13 @@
 plugins {
-    id 'org.springframework.boot' version '2.6.6'
-    id 'io.spring.dependency-management' version '1.0.14.RELEASE'
+    id 'org.springframework.boot' version '2.7.5'
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
     id 'java'
 }
 
-group = 'com.petrovskit.mds'
-version = '0.0.1-SNAPSHOT'
+group = 'com.petrovskiy.mds'
+version = '0.0.1'
 sourceCompatibility = '17'
+
 
 repositories {
     mavenCentral()
@@ -17,6 +18,8 @@ ext {
 }
 
 dependencies {
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

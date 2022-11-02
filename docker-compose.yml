@@ -1,0 +1,83 @@
+ version: '3'
+
+ services:
+  db:
+    image: 'postgres:15-alpine'
+    container_name: postgre_db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=agreg
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=12345
+  eureka-server:
+   image: 'eureka-server:latest'
+   build: ./
+   ports:
+     - "8761:8761"
+   environment:
+         eureka.instance.hostname: eureka-server
+         eureka.client.serviceUrl.defaultZone: http://eureka-server:8761/eureka
+   container_name: eureka-server
+
+  api-gateway:
+   image: 'api-gateway:latest'
+   build: ./
+   ports:
+     - "8765:8765"
+   links:
+    - eureka-server
+   container_name: api-gateway
+   environment:
+     server.port: 8765
+     eureka.client.serviceUrl.defaultZone: http://eureka-server:8761/eureka
+
+
+  companies-api:
+   image: 'companies-api:latest'
+   build: ./
+   ports:
+     - "8081:8081"
+   links:
+     - eureka-server
+   container_name: companies-api
+   depends_on:
+     - eureka-server
+     - api-gateway
+     - db
+   environment:
+     - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/agreg?currentSchema=company
+     - SPRING_DATASOURCE_USERNAME=root
+     - SPRING_DATASOURCE_PASSWORD=12345
+
+  api-users:
+   image: 'users-api:latest'
+   build: ./
+   ports:
+     - "8082:8082"
+   links:
+     - eureka-server
+   container_name: users-api
+   depends_on:
+     - companies-api
+   environment:
+     - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/agreg?currentSchema=users
+     - SPRING_DATASOURCE_USERNAME=root
+     - SPRING_DATASOURCE_PASSWORD=12345
+
+  items-api:
+   image: 'item-api:latest'
+   build: ./
+   ports:
+     - "8083:8083"
+   links:
+     - eureka-server
+   container_name: item-api
+   depends_on:
+     - companies-api
+   environment:
+     - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/agreg?currentSchema=item
+     - SPRING_DATASOURCE_USERNAME=root
+     - SPRING_DATASOURCE_PASSWORD=12345
+
+
