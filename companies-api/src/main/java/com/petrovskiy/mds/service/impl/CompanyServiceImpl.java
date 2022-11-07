@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
+import java.util.logging.Logger;
 
 import static com.petrovskiy.mds.service.exception.ExceptionCode.NON_EXISTENT_ENTITY;
 import static com.petrovskiy.mds.service.exception.ExceptionCode.NON_EXISTENT_PAGE;
@@ -25,6 +26,7 @@ public class CompanyServiceImpl implements CompanyService {
     private final CompanyDao companyDao;
     private final CompanyMapper companyMapper;
     private final PageValidation validation;
+    private Logger logger;
 
     @Autowired
     public CompanyServiceImpl(CompanyDao companyDao, CompanyMapper companyMapper,
@@ -37,6 +39,7 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public CompanyDto create(CompanyDto companyDto) {
         Company company = createCompany(companyMapper.dtoToEntity(companyDto));
+        logger.info("created Company: "+ companyDto);
         return companyMapper.entityToDto(company);
     }
 
@@ -49,12 +52,14 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public CompanyDto update(BigInteger id, CompanyDto companyDto) {
         Company company = companyDao.save(companyMapper.dtoToEntity(findById(id)));
+        logger.info("update Company: "+ companyDto);
         return companyMapper.entityToDto(company);
     }
 
     @Override
     public CompanyDto findById(BigInteger id) {
         Company company = companyDao.findById(id).orElseThrow(() -> new SystemException(NON_EXISTENT_ENTITY));
+        logger.info("founded Company: "+ company);
         return companyMapper.entityToDto(company);
     }
 
@@ -72,5 +77,6 @@ public class CompanyServiceImpl implements CompanyService {
     public void delete(BigInteger id) {
         companyDao.findById(id).ifPresentOrElse(position -> companyDao.deleteById(id)
                 ,()->new SystemException(NON_EXISTENT_ENTITY));
+        logger.info("Company deleted by id: "+ id);
     }
 }
