@@ -1,0 +1,290 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1667124635889-1
+      author: Lenovo (generated)
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: users_pkey
+                  name: id
+                  type: UUID
+              - column:
+                  constraints:
+                    nullable: false
+                  name: created
+                  type: TIMESTAMP WITHOUT TIME ZONE
+              - column:
+                  constraints:
+                    nullable: false
+                  name: email
+                  type: VARCHAR(32)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: role_id
+                  type: INTEGER
+              - column:
+                  constraints:
+                    nullable: false
+                  name: updated
+                  type: TIMESTAMP WITHOUT TIME ZONE
+              - column:
+                  constraints:
+                    nullable: false
+                  name: username
+                  type: VARCHAR(255)
+              - column:
+                  name: company_id
+                  type: numeric(19, 2)
+            tableName: users
+  - changeSet:
+      id: 1667124635889-2
+      author: Lenovo (generated)
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: company_pkey
+                  name: id
+                  type: numeric(19, 2)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: created
+                  type: TIMESTAMP WITHOUT TIME ZONE
+              - column:
+                  constraints:
+                    nullable: false
+                  name: description
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: email
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: name
+                  type: VARCHAR(255)
+            tableName: company
+  - changeSet:
+      id: 1667124635889-3
+      author: Lenovo (generated)
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: position_pkey
+                  name: id
+                  type: numeric(19, 2)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: amount
+                  type: numeric(19, 2)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: created
+                  type: TIMESTAMP WITHOUT TIME ZONE
+              - column:
+                  constraints:
+                    nullable: false
+                  name: created_by
+                  type: VARCHAR(255)
+              - column:
+                  name: company_id
+                  type: numeric(19, 2)
+              - column:
+                  name: item_id
+                  type: UUID
+            tableName: position
+  - changeSet:
+      id: 1667124635889-4
+      author: Lenovo (generated)
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: roles_pkey
+                  name: id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: name
+                  type: VARCHAR(255)
+            tableName: roles
+  - changeSet:
+      id: 1667124635889-5
+      author: Lenovo (generated)
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: item_pkey
+                  name: id
+                  type: UUID
+              - column:
+                  constraints:
+                    nullable: false
+                  name: created
+                  type: TIMESTAMP WITHOUT TIME ZONE
+              - column:
+                  name: description
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  name: category_id
+                  type: numeric(19, 2)
+            tableName: item
+  - changeSet:
+      id: 1667124635889-6
+      author: Lenovo (generated)
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: category_pkey
+                  name: id
+                  type: numeric(19, 2)
+              - column:
+                  name: description
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  name: parent_category
+                  type: VARCHAR(255)
+            tableName: category
+  - changeSet:
+      id: 1667124635889-7
+      author: Lenovo (generated)
+      changes:
+        - addUniqueConstraint:
+            columnNames: email
+            constraintName: uk_6dotkott2kjsp8vw4d0m25fb7
+            tableName: users
+  - changeSet:
+      id: 1667124635889-8
+      author: Lenovo (generated)
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: company_id
+            baseTableName: users
+            constraintName: fkbwv4uspmyi7xqjwcrgxow361t
+            deferrable: false
+            initiallyDeferred: false
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: company
+            validate: true
+  - changeSet:
+      id: 1667124635889-9
+      author: Lenovo (generated)
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: company_id
+            baseTableName: position
+            constraintName: fkkpqfp6ontwcnqpkrfwv02iw1y
+            deferrable: false
+            initiallyDeferred: false
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: company
+            validate: true
+  - changeSet:
+      id: 1667124635889-10
+      author: Lenovo (generated)
+      changes:
+        - addUniqueConstraint:
+            columnNames: name
+            constraintName: uk_niu8sfil2gxywcru9ah3r4ec5
+            tableName: company
+  - changeSet:
+      id: 1667124635889-11
+      author: Lenovo (generated)
+      changes:
+        - addUniqueConstraint:
+            columnNames: name
+            constraintName: uk_ofx66keruapi6vyqpv6f2or37
+            tableName: roles
+  - changeSet:
+      id: 1667124635889-12
+      author: Lenovo (generated)
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: category_id
+            baseTableName: item
+            constraintName: fk2n9w8d0dp4bsfra9dcg0046l4
+            deferrable: false
+            initiallyDeferred: false
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: category
+            validate: true
+  - changeSet:
+      id: 1667124635889-13
+      author: Lenovo (generated)
+      changes:
+        - addUniqueConstraint:
+            columnNames: name
+            constraintName: uk_46ccwnsi9409t36lurvtyljak
+            tableName: category
+  - changeSet:
+      id: 1667124635889-14
+      author: Lenovo (generated)
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: item_id
+            baseTableName: position
+            constraintName: fk4povmr863xpok7k7blig5ndqx
+            deferrable: false
+            initiallyDeferred: false
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: item
+            validate: true
+  - changeSet:
+      id: 1667124635889-15
+      author: Lenovo (generated)
+      changes:
+        - createSequence:
+            sequenceName: hibernate_sequence
+

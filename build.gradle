@@ -1,13 +1,10 @@
 plugins {
-    id 'org.springframework.boot' version '2.6.6'
-    id 'io.spring.dependency-management' version '1.0.14.RELEASE'
     id 'java'
-    id 'jacoco'
 }
 
 group = 'com.petrovskiy.mds'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '16'
+sourceCompatibility = '17'
 
 configurations {
     compileOnly {
@@ -19,63 +16,11 @@ repositories {
     mavenCentral()
 }
 
-ext {
-    set('testcontainersVersion', "1.17.4")
-    mapstructVersion = "1.5.2.Final"
-    lombokVersion = "1.18.20"
-    lombokMapstructBindingVersion = "0.2.0"
-}
-
 dependencies {
-
-    implementation 'org.liquibase:liquibase-core'
-    implementation 'org.postgresql:postgresql:42.2.10'
-    implementation 'org.hibernate:hibernate-validator:8.0.0.Final'
-    implementation 'org.springframework.boot:spring-boot-starter-web:2.7.3'
-    implementation "org.mapstruct:mapstruct:${mapstructVersion}", "org.projectlombok:lombok:${lombokVersion}"
-    implementation 'com.epages:wiremock-spring-boot-starter:0.8.0'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-
-
-    implementation 'org.keycloak:keycloak-spring-boot-starter'
-
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.2.Final'
+    implementation 'org.springframework.boot:spring-boot-starter'
+    compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
-    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}", "org.projectlombok:lombok:${lombokVersion}", "org.projectlombok:lombok-mapstruct-binding:${lombokMapstructBindingVersion}"
-
-
-    testImplementation 'io.rest-assured:spring-mock-mvc:5.1.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation "org.testcontainers:postgresql:1.17.5"
-    testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: '1.17.3'
-
-
-}
-
-dependencyManagement {
-    imports {
-        mavenBom "org.testcontainers:testcontainers-bom:${testcontainersVersion}"
-        mavenBom "org.keycloak.bom:keycloak-adapter-bom:4.6.0.Final"
-    }
-
-}
-
-test {
-    finalizedBy jacocoTestReport // report is always generated after tests run
-}
-jacocoTestReport {
-    dependsOn test // tests are required to run before generating the report
-}
-jacoco {
-    toolVersion = "0.8.8"
-    reportsDirectory = layout.buildDirectory.dir('customJacocoReportDir')
-}
-jacocoTestReport {
-    reports {
-        xml.required = false
-        csv.required = false
-        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
-    }
 }
 
 tasks.named('test') {
