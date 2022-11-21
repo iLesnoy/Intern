@@ -12,14 +12,16 @@ import com.petrovskiy.mds.service.exception.SystemException;
 import com.petrovskiy.mds.service.mapper.PositionMapper;
 import com.petrovskiy.mds.service.validation.PageValidation;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.logging.Logger;
 
 import static com.petrovskiy.mds.service.exception.ExceptionCode.NON_EXISTENT_ENTITY;
 import static com.petrovskiy.mds.service.exception.ExceptionCode.NON_EXISTENT_PAGE;
@@ -33,7 +35,7 @@ public class PositionServiceImpl implements PositionService {
     private final ItemFeignClient itemService;
     private final CompanyServiceImpl companyService;
     private final PageValidation validation;
-    private Logger logger;
+    private Logger logger = LoggerFactory.getLogger(PositionServiceImpl.class);
 
 
     @Autowired
@@ -61,9 +63,9 @@ public class PositionServiceImpl implements PositionService {
 
 
     @Transactional
-    @Override
     public PositionDto update(BigInteger id, PositionDto positionDto) {
-        Position position = positionDao.save(positionMapper.dtoToEntity(findById(id)));
+        findByPositionId(id);
+        Position position = positionDao.save(positionMapper.dtoToEntity(positionDto));
         ItemDto itemDto = itemService.findById(position.getItemId());
         CompanyDto companyDto = companyService.findById(positionDto.getCompanyDto().getId());
 
@@ -73,7 +75,7 @@ public class PositionServiceImpl implements PositionService {
 
     @Override
     public PositionDto findById(BigInteger id) {
-        Position position = positionDao.findById(id).orElseThrow(()->new SystemException(NON_EXISTENT_ENTITY));
+        Position position = findByPositionId(id);
         ItemDto itemDto = itemService.findById(position.getItemId());
         CompanyDto companyDto = companyService.findById(position.getCompanyId());
 
@@ -81,6 +83,9 @@ public class PositionServiceImpl implements PositionService {
         return positionMapper.entityToDto(position,itemDto,companyDto);
     }
 
+    private Position findByPositionId(BigInteger id) {
+        return positionDao.findById(id).orElseThrow(() -> new SystemException(NON_EXISTENT_ENTITY));
+    }
     @Override
     public Page<PositionDto> findAll(Pageable pageable) {
         Page<Position> orderPage = positionDao.findAll(pageable);
@@ -90,9 +95,7 @@ public class PositionServiceImpl implements PositionService {
         return new CustomPage<>(orderPage.getContent(), orderPage.getPageable(), orderPage.getTotalElements())
                 .map(position -> {
                     ItemDto itemDto = itemService.findById(position.getItemId());
-                    CompanyDto companyDto = companyService.findById(position.getId());
-                    companyService.findById(position.getCompanyId());
-
+                    CompanyDto companyDto = companyService.findById(position.getCompanyId());
                     return positionMapper.entityToDto(position,itemDto,companyDto);
                 });
     }
@@ -102,5 +105,17 @@ public class PositionServiceImpl implements PositionService {
         positionDao.findById(id).ifPresentOrElse(position -> positionDao.deleteById(id)
                 ,()->new SystemException(NON_EXISTENT_ENTITY));
         logger.info("Position deleted by id: "+ id);
+    }
+
+    @Override
+    public PositionDto findPositionByIdAndAmount(BigInteger id, BigDecimal amount) {
+        Position position = positionDao.findPositionsByIdAndAmountIsAfterOrAmountEquals(id,amount,amount)
+                .orElseThrow(()->new SystemException(NON_EXISTENT_ENTITY));
+
+        logger.info("findPositionByIdAndAmount: " + position);
+
+        ItemDto itemDto = itemService.findById(position.getItemId());
+        CompanyDto companyDto = companyService.findById(position.getCompanyId());
+        return positionMapper.entityToDto(position,itemDto,companyDto);
     }
 }

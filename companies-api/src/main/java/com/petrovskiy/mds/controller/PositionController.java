@@ -1,18 +1,18 @@
 package com.petrovskiy.mds.controller;
 
 import com.petrovskiy.mds.service.PositionService;
-import com.petrovskiy.mds.service.dto.CompanyDto;
 import com.petrovskiy.mds.service.dto.PositionDto;
-import com.petrovskiy.mds.service.impl.CompanyServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.logging.Logger;
 
 @RestController
 @Slf4j
@@ -22,7 +22,7 @@ public class PositionController {
     @Autowired
     private PositionService positionService;
 
-    private Logger logger;
+    private Logger logger = LoggerFactory.getLogger(PositionController.class);
 
 
     @PostMapping
@@ -43,6 +43,11 @@ public class PositionController {
     public PositionDto findById(@PathVariable BigInteger id) {
         logger.info("findPositionById: " + id);
         return positionService.findById(id);
+    }
+
+    @GetMapping("/amount/{id}/{amount}")
+    public PositionDto checkAmount(@PathVariable BigInteger id , @PathVariable String amount) {
+        return positionService.findPositionByIdAndAmount(id,new BigDecimal(amount));
     }
 
 

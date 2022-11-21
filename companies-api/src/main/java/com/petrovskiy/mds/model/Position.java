@@ -35,6 +35,7 @@ public class Position {
     @JoinColumn(name = "company_id")
     private BigInteger companyId;
 
+
     @PrePersist
     private void PrePersist(){
         created = LocalDateTime.now();

@@ -25,11 +25,9 @@ public class PositionMapperImpl implements PositionMapper {
     @Override
     public Position dtoToEntity(PositionDto positionDto) {
         Position position = new Position();
-        position.setId(position.getId());
         position.setCreated_by(positionDto.getCreated_by());
         position.setCreated(positionDto.getCreated());
         position.setAmount(positionDto.getAmount());
-
         position.setCompanyId(positionDto.getCompanyDto().getId());
         position.setItemId(positionDto.getItemDto().getId());
         return position;

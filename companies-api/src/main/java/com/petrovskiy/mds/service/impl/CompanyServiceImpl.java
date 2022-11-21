@@ -8,6 +8,8 @@ import com.petrovskiy.mds.service.dto.CustomPage;
 import com.petrovskiy.mds.service.exception.SystemException;
 import com.petrovskiy.mds.service.mapper.CompanyMapper;
 import com.petrovskiy.mds.service.validation.PageValidation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
-import java.util.logging.Logger;
 
 import static com.petrovskiy.mds.service.exception.ExceptionCode.NON_EXISTENT_ENTITY;
 import static com.petrovskiy.mds.service.exception.ExceptionCode.NON_EXISTENT_PAGE;
@@ -26,7 +27,7 @@ public class CompanyServiceImpl implements CompanyService {
     private final CompanyDao companyDao;
     private final CompanyMapper companyMapper;
     private final PageValidation validation;
-    private Logger logger;
+    private Logger logger = LoggerFactory.getLogger(CompanyServiceImpl.class);
 
     @Autowired
     public CompanyServiceImpl(CompanyDao companyDao, CompanyMapper companyMapper,
@@ -51,7 +52,9 @@ public class CompanyServiceImpl implements CompanyService {
     @Transactional
     @Override
     public CompanyDto update(BigInteger id, CompanyDto companyDto) {
-        Company company = companyDao.save(companyMapper.dtoToEntity(findById(id)));
+        findById(id);
+        Company company  = companyMapper.dtoToEntity(companyDto);
+        companyDao.save(company);
         logger.info("update Company: "+ companyDto);
         return companyMapper.entityToDto(company);
     }

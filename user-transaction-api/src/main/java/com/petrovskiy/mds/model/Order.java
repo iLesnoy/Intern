@@ -33,7 +33,7 @@ public class Order {
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
     @JoinTable(name="position_has_orders"
             ,joinColumns = @JoinColumn(name = "order_id", referencedColumnName = "id")
             ,inverseJoinColumns = @JoinColumn(name = "position_id",referencedColumnName = "id"))

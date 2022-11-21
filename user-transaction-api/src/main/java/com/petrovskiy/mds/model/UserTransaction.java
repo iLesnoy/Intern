@@ -1,17 +1,9 @@
 package com.petrovskiy.mds.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Size;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @NoArgsConstructor
@@ -30,6 +22,8 @@ public class UserTransaction {
     @Column(name = "transaction_date", nullable = false)
     private LocalDateTime transactionDate;
 
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "order_id")
     private Order order;

@@ -1,7 +1,8 @@
 package com.petrovskiy.mds.service.exception;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,7 @@ public class ControllerAdvisor {
     private static final String ERROR_MESSAGE = "errorMessage";
     private static final String ERROR_CODE = "errorCode";
     private final ResourceBundleMessageSource messages;
-    private Logger logger;
+    private Logger logger = LoggerFactory.getLogger(ControllerAdvisor.class);
 
     @Autowired
     public ControllerAdvisor(ResourceBundleMessageSource messages) {
@@ -61,7 +62,7 @@ public class ControllerAdvisor {
         Map<String, Object> response = new LinkedHashMap<>();
         response.put(ERROR_MESSAGE, messages.getMessage(getMessageByCode(errorCode), EMPTY_ARGS, locale));
         response.put(ERROR_CODE, errorCode);
-        logger.error(response);
+        logger.error(String.valueOf(response));
         return response;
     }
 
