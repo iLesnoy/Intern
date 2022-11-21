@@ -29,7 +29,6 @@ public class UserController {
         return userService.create(userDto);
     }
 
-    @HystrixCommand(fallbackMethod = "findByIdTest")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public UserDto findById(@PathVariable UUID id) {
