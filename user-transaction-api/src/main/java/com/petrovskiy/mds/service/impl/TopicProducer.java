@@ -14,9 +14,9 @@ public class TopicProducer {
     @Value("${topic.name.producer}")
     private String topicName;
 
-    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
-    public void send(String message){
+    public void send(Object message){
         log.info("Send MESSAGE: {}" ,message);
         kafkaTemplate.send(topicName, message);
     }
