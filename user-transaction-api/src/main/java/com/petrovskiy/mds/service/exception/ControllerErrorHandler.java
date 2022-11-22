@@ -1,8 +1,5 @@
 package com.petrovskiy.mds.service.exception;
 
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.http.HttpStatus;
@@ -19,18 +16,16 @@ import java.util.Map;
 import static com.petrovskiy.mds.service.exception.ExceptionCode.BAD_REQUEST;
 import static com.petrovskiy.mds.service.exception.ExceptionCode.UNREADABLE_MESSAGE;
 
-@Slf4j
 @RestControllerAdvice
-public class ControllerAdvisor {
+public class ControllerErrorHandler {
     private static final Object[] EMPTY_ARGS = new Object[0];
     private static final String INITIAL_ERROR_MSG = "error_msg.";
     private static final String ERROR_MESSAGE = "errorMessage";
     private static final String ERROR_CODE = "errorCode";
     private final ResourceBundleMessageSource messages;
-    private Logger logger = LoggerFactory.getLogger(ControllerAdvisor.class);
 
     @Autowired
-    public ControllerAdvisor(ResourceBundleMessageSource messages) {
+    public ControllerErrorHandler(ResourceBundleMessageSource messages) {
         this.messages = messages;
     }
 
@@ -62,7 +57,6 @@ public class ControllerAdvisor {
         Map<String, Object> response = new LinkedHashMap<>();
         response.put(ERROR_MESSAGE, messages.getMessage(getMessageByCode(errorCode), EMPTY_ARGS, locale));
         response.put(ERROR_CODE, errorCode);
-        logger.error(String.valueOf(response));
         return response;
     }
 
