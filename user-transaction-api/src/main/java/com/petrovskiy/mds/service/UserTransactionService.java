@@ -6,8 +6,8 @@ import com.petrovskiy.mds.service.dto.ResponseTransactionDto;
 
 import java.util.UUID;
 
-public interface UserTransactionService extends BaseService<ResponseTransactionDto, UUID>{
+public interface UserTransactionService{
 
-    public ResponseTransactionDto create(UserTransaction requestOrderDto);
+    ResponseTransactionDto create(UserTransaction requestOrderDto);
 
 }

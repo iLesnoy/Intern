@@ -6,5 +6,5 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 public interface PositionService extends BaseService<PositionDto, BigInteger>{
-    PositionDto findPositionByIdAndAmount(BigInteger id, BigDecimal amount);
+    PositionDto findPositionById(BigInteger id, BigDecimal amount);
 }

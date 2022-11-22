@@ -5,13 +5,23 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import java.time.LocalDateTime;
+import java.util.UUID;
+import javax.persistence.GenerationType;
+import javax.persistence.Enumerated;
+import javax.persistence.PreUpdate;
+import javax.persistence.PrePersist;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.math.BigInteger;
-import java.time.LocalDateTime;
-import java.util.UUID;
+
 
 @NoArgsConstructor
 @AllArgsConstructor

@@ -12,8 +12,6 @@ import com.petrovskiy.mds.service.exception.SystemException;
 import com.petrovskiy.mds.service.mapper.PositionMapper;
 import com.petrovskiy.mds.service.validation.PageValidation;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,8 +33,6 @@ public class PositionServiceImpl implements PositionService {
     private final ItemFeignClient itemService;
     private final CompanyServiceImpl companyService;
     private final PageValidation validation;
-    private Logger logger = LoggerFactory.getLogger(PositionServiceImpl.class);
-
 
     @Autowired
     public PositionServiceImpl(PositionDao positionDao, PositionMapper positionMapper,
@@ -57,7 +53,7 @@ public class PositionServiceImpl implements PositionService {
         CompanyDto companyDto = companyService.findById(positionDto.getCompanyDto().getId());
         Position position  =  positionDao.save(positionMapper.dtoToEntity(positionDto));
 
-        logger.info("created Position: "+ position);
+        log.info("created Position: "+ position);
         return positionMapper.entityToDto(position,itemDto,companyDto);
     }
 
@@ -69,7 +65,7 @@ public class PositionServiceImpl implements PositionService {
         ItemDto itemDto = itemService.findById(position.getItemId());
         CompanyDto companyDto = companyService.findById(positionDto.getCompanyDto().getId());
 
-        logger.info("updated Position: " + position);
+        log.info("updated Position: " + position);
         return positionMapper.entityToDto(position,itemDto,companyDto);
     }
 
@@ -79,7 +75,7 @@ public class PositionServiceImpl implements PositionService {
         ItemDto itemDto = itemService.findById(position.getItemId());
         CompanyDto companyDto = companyService.findById(position.getCompanyId());
 
-        logger.info("founded Position: " + position);
+        log.info("founded Position: " + position);
         return positionMapper.entityToDto(position,itemDto,companyDto);
     }
 
@@ -104,15 +100,15 @@ public class PositionServiceImpl implements PositionService {
     public void delete(BigInteger id) {
         positionDao.findById(id).ifPresentOrElse(position -> positionDao.deleteById(id)
                 ,()->new SystemException(NON_EXISTENT_ENTITY));
-        logger.info("Position deleted by id: "+ id);
+        log.info("Position deleted by id: "+ id);
     }
 
     @Override
-    public PositionDto findPositionByIdAndAmount(BigInteger id, BigDecimal amount) {
+    public PositionDto findPositionById(BigInteger id, BigDecimal amount) {
         Position position = positionDao.findPositionsByIdAndAmountIsAfterOrAmountEquals(id,amount,amount)
                 .orElseThrow(()->new SystemException(NON_EXISTENT_ENTITY));
 
-        logger.info("findPositionByIdAndAmount: " + position);
+        log.info("findPositionByIdAndAmount: " + position);
 
         ItemDto itemDto = itemService.findById(position.getItemId());
         CompanyDto companyDto = companyService.findById(position.getCompanyId());

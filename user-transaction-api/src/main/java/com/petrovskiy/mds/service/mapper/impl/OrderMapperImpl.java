@@ -20,7 +20,7 @@ public class OrderMapperImpl implements OrderMapper {
                 .id(order.getId())
                 .userId(order.getUserId())
                 .positionList(order.getPositionList()
-                        .stream().map(a->a.getId()).collect(Collectors.toList()))
+                        .stream().map(Position::getId).collect(Collectors.toList()))
                 .amount(order.getAmount())
                 .build();
     }

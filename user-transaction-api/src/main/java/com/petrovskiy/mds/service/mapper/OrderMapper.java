@@ -10,5 +10,5 @@ public interface OrderMapper {
 
     RequestOrderDto orderToDto(Order order);
 
-    Order dtoToOrder(RequestOrderDto dto, List<Position> positionDto);
+    Order dtoToOrder(RequestOrderDto dto, List<Position> positionList);
 }

@@ -1,10 +1,7 @@
 package com.petrovskiy.mds.controller;
 
 import com.petrovskiy.mds.model.Order;
-import com.petrovskiy.mds.model.UserTransaction;
-import com.petrovskiy.mds.service.OrderService;
 import com.petrovskiy.mds.service.dto.RequestOrderDto;
-import com.petrovskiy.mds.service.dto.ResponseTransactionDto;
 import com.petrovskiy.mds.service.impl.OrderServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

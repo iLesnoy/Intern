@@ -3,6 +3,7 @@ package com.petrovskiy.mds.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +12,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class TopicListener {
 
-    private String topicName = "topic.transaction";
+    @Value("${topic.name.producer}")
+    private String topicName;
 
     @KafkaListener(topics = "topic.transaction", groupId = "group_id")
     public void consume(ConsumerRecord<String, String> payload){log.info("Topic: {}", topicName);

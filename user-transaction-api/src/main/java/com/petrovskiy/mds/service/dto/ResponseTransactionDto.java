@@ -18,5 +18,7 @@ public class ResponseTransactionDto {
 
     private UserDto user;
 
+    private OrderStatus orderStatus;
+
     private RequestOrderDto orderDto;
 }

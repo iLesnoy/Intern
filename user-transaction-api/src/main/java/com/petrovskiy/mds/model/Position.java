@@ -1,6 +1,6 @@
 package com.petrovskiy.mds.model;
 
-import lombok.Data;
+import lombok.*;
 import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
@@ -10,8 +10,12 @@ import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.*;
 
-
-@Data
+@Getter
+@Setter
+@ToString
+@Builder
+@EqualsAndHashCode
+@NoArgsConstructor
 @Entity
 @Table(name = "position")
 public class Position {
@@ -21,7 +25,7 @@ public class Position {
     private BigInteger id;
 
     @Column(name = "created_by", nullable = false)
-    private String created_by;
+    private String createdBy;
 
     @Column(name = "created", nullable = false)
     private LocalDateTime created;

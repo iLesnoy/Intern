@@ -8,8 +8,7 @@ import com.petrovskiy.mds.service.dto.CustomPage;
 import com.petrovskiy.mds.service.exception.SystemException;
 import com.petrovskiy.mds.service.mapper.CompanyMapper;
 import com.petrovskiy.mds.service.validation.PageValidation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,13 +20,15 @@ import java.math.BigInteger;
 import static com.petrovskiy.mds.service.exception.ExceptionCode.NON_EXISTENT_ENTITY;
 import static com.petrovskiy.mds.service.exception.ExceptionCode.NON_EXISTENT_PAGE;
 
+;
+
+@Slf4j
 @Service
 public class CompanyServiceImpl implements CompanyService {
 
     private final CompanyDao companyDao;
     private final CompanyMapper companyMapper;
     private final PageValidation validation;
-    private Logger logger = LoggerFactory.getLogger(CompanyServiceImpl.class);
 
     @Autowired
     public CompanyServiceImpl(CompanyDao companyDao, CompanyMapper companyMapper,
@@ -40,7 +41,7 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public CompanyDto create(CompanyDto companyDto) {
         Company company = createCompany(companyMapper.dtoToEntity(companyDto));
-        logger.info("created Company: "+ companyDto);
+        log.info("created Company: "+ companyDto);
         return companyMapper.entityToDto(company);
     }
 
@@ -55,14 +56,14 @@ public class CompanyServiceImpl implements CompanyService {
         findById(id);
         Company company  = companyMapper.dtoToEntity(companyDto);
         companyDao.save(company);
-        logger.info("update Company: "+ companyDto);
+        log.info("update Company: "+ companyDto);
         return companyMapper.entityToDto(company);
     }
 
     @Override
     public CompanyDto findById(BigInteger id) {
         Company company = companyDao.findById(id).orElseThrow(() -> new SystemException(NON_EXISTENT_ENTITY));
-        logger.info("founded Company: "+ company);
+        log.info("founded Company: "+ company);
         return companyMapper.entityToDto(company);
     }
 
@@ -80,6 +81,6 @@ public class CompanyServiceImpl implements CompanyService {
     public void delete(BigInteger id) {
         companyDao.findById(id).ifPresentOrElse(position -> companyDao.deleteById(id)
                 ,()->new SystemException(NON_EXISTENT_ENTITY));
-        logger.info("Company deleted by id: "+ id);
+        log.info("Company deleted by id: "+ id);
     }
 }

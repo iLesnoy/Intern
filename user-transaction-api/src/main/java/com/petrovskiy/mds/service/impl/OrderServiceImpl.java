@@ -6,7 +6,6 @@ import com.petrovskiy.mds.model.Position;
 import com.petrovskiy.mds.service.OrderService;
 import com.petrovskiy.mds.service.PositionFeignClient;
 import com.petrovskiy.mds.service.dto.CustomPage;
-import com.petrovskiy.mds.service.dto.PositionDto;
 import com.petrovskiy.mds.service.dto.RequestOrderDto;
 import com.petrovskiy.mds.service.exception.SystemException;
 import com.petrovskiy.mds.service.mapper.OrderMapper;
@@ -85,7 +84,6 @@ public class OrderServiceImpl implements OrderService {
                 .map(positionService::findById)
                 .map(positionMapper::dtoToEntity)
                 .collect(Collectors.toCollection(ArrayList::new));
-        positionList.stream().forEach(System.out::println);
         order.setPositionList(positionList);
     }
 

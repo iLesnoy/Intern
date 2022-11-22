@@ -1,15 +1,28 @@
 package com.petrovskiy.mds.model;
 
+import com.petrovskiy.mds.service.dto.OrderStatus;
+import com.sun.istack.NotNull;
 import lombok.*;
 
-import javax.persistence.*;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
 import java.time.LocalDateTime;
 import java.util.UUID;
+import javax.persistence.GenerationType;
+import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
+@Getter
+@Setter
+@ToString
 @Builder
+@EqualsAndHashCode
+@NoArgsConstructor
 @Entity
 @Table(name="user_transaction")
 public class UserTransaction {
@@ -21,6 +34,9 @@ public class UserTransaction {
 
     @Column(name = "transaction_date", nullable = false)
     private LocalDateTime transactionDate;
+
+    @NotNull
+    private OrderStatus orderStatus;
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
@@ -34,3 +50,4 @@ public class UserTransaction {
     }
 
 }
+

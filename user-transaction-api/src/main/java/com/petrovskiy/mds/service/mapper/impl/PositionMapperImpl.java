@@ -12,25 +12,25 @@ public class PositionMapperImpl implements PositionMapper {
 
     @Override
     public PositionDto entityToDto(Position position,ItemDto itemDto,CompanyDto companyDto) {
-        PositionDto positionDto = new PositionDto();
-        positionDto.setId(position.getId());
-        positionDto.setCreated_by(position.getCreated_by());
-        positionDto.setCreated(position.getCreated());
-        positionDto.setAmount(position.getAmount());
-        positionDto.setItemDto(itemDto);
-        positionDto.setCompanyDto(companyDto);
-        return positionDto;
+        return PositionDto.builder()
+                .id(position.getId())
+                .createdBy(position.getCreatedBy())
+                .created(position.getCreated())
+                .amount(position.getAmount())
+                .itemDto(itemDto)
+                .companyDto(companyDto)
+                .build();
     }
 
     @Override
     public Position dtoToEntity(PositionDto positionDto) {
-        Position position = new Position();
-        position.setId(positionDto.getId());
-        position.setCreated_by(positionDto.getCreated_by());
-        position.setCreated(positionDto.getCreated());
-        position.setAmount(positionDto.getAmount());
-        position.setCompanyId(positionDto.getCompanyDto().getId());
-        position.setItemId(positionDto.getItemDto().getId());
-        return position;
+        return Position.builder()
+                .id(positionDto.getId())
+                .createdBy(positionDto.getCreatedBy())
+                .created(positionDto.getCreated())
+                .amount(positionDto.getAmount())
+                .companyId(positionDto.getCompanyDto().getId())
+                .itemId(positionDto.getItemDto().getId())
+                .build();
     }
 }

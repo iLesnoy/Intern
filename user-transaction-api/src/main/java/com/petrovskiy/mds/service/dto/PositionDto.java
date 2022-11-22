@@ -23,7 +23,7 @@ public class PositionDto {
     private BigInteger id;
 
     @JsonProperty("createdBy")
-    private String created_by;
+    private String createdBy;
 
     @JsonProperty("created")
     private LocalDateTime created;
