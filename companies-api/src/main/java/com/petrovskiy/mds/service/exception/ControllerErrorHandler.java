@@ -17,7 +17,7 @@ import static com.petrovskiy.mds.service.exception.ExceptionCode.BAD_REQUEST;
 import static com.petrovskiy.mds.service.exception.ExceptionCode.UNREADABLE_MESSAGE;
 
 @RestControllerAdvice
-public class ControllerAdvisor {
+public class ControllerErrorHandler {
     private static final Object[] EMPTY_ARGS = new Object[0];
     private static final String INITIAL_ERROR_MSG = "error_msg.";
     private static final String ERROR_MESSAGE = "errorMessage";
@@ -25,7 +25,7 @@ public class ControllerAdvisor {
     private final ResourceBundleMessageSource messages;
 
     @Autowired
-    public ControllerAdvisor(ResourceBundleMessageSource messages) {
+    public ControllerErrorHandler(ResourceBundleMessageSource messages) {
         this.messages = messages;
     }
 

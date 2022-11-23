@@ -2,13 +2,19 @@ package com.petrovskiy.mds.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
+@Builder
 @JsonPropertyOrder({"id", "createdBy","created","amount", "item","company"})
 public class PositionDto {
 
@@ -16,7 +22,7 @@ public class PositionDto {
     private BigInteger id;
 
     @JsonProperty("createdBy")
-    private String created_by;
+    private String createdBy;
 
     @JsonProperty("created")
     private LocalDateTime created;
