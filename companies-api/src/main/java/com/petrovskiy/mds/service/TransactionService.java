@@ -4,6 +4,7 @@ import com.petrovskiy.mds.model.Order;
 import com.petrovskiy.mds.model.UserTransaction;
 import com.petrovskiy.mds.service.dto.PositionDto;
 import com.petrovskiy.mds.service.dto.ResponseTransactionDto;
+import com.petrovskiy.mds.service.dto.TransactionResult;
 
 import java.util.Optional;
 
@@ -13,5 +14,5 @@ public interface TransactionService {
 
     Optional<PositionDto> validateTransaction(Order order);
 
-    void create(ResponseTransactionDto responseTransactionDto);
+    void send(TransactionResult transactionResult);
 }
