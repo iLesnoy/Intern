@@ -31,14 +31,15 @@ public class Order {
     @Column(name = "user_id", nullable = false)
     private UUID userId;
 
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.MERGE)
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.MERGE)
     @JoinTable(name="position_has_orders"
             ,joinColumns = @JoinColumn(name = "order_id", referencedColumnName = "id")
             ,inverseJoinColumns = @JoinColumn(name = "position_id",referencedColumnName = "id"))
     private List<Position> positionList = new ArrayList<>();
 
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "order")
     private List<UserTransaction> userTransactions;
