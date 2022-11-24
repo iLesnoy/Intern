@@ -8,12 +8,10 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Getter
-@Setter
-@ToString
-@Builder
-@EqualsAndHashCode
+@AllArgsConstructor
 @NoArgsConstructor
+@Data
+@Builder
 @Entity
 @Table(name="user_transaction")
 public class UserTransaction {

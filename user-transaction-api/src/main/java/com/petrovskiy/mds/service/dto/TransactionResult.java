@@ -14,5 +14,5 @@ import java.util.UUID;
 public class TransactionResult {
 
     private UUID id;
-    private OrderStatus httpStatus;
+    private OrderStatus orderStatus;
 }

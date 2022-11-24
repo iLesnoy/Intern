@@ -9,7 +9,6 @@ import com.petrovskiy.mds.service.UserTransactionService;
 import com.petrovskiy.mds.service.dto.OrderStatus;
 import com.petrovskiy.mds.service.dto.ResponseTransactionDto;
 import com.petrovskiy.mds.service.dto.UserDto;
-import com.petrovskiy.mds.service.mapper.PositionMapper;
 import com.petrovskiy.mds.service.mapper.impl.UserTransactionMapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,12 +39,12 @@ public class UserTransactionServiceImpl implements UserTransactionService {
 
         Order order = orderService.findById(userTransaction.getOrder().getId());
         UserDto user = userService.findById(order.getUserId());
+        setOrderStatus(userTransaction);
 
-        UserTransaction transaction = transactionDao.save(userTransaction);
-        setOrderStatus(transaction);
-        topicProducer.send(transaction);
+        UserTransaction createdTransaction = transactionDao.save(userTransaction);
+        topicProducer.send(createdTransaction);
 
-        return mapper.transactionToDto(transaction, user, order);
+        return mapper.transactionToDto(createdTransaction, user, order);
     }
 
     void setOrderStatus(UserTransaction userTransaction){
