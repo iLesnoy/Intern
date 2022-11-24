@@ -12,5 +12,7 @@ import java.util.Optional;
 @Repository
 public interface PositionDao extends JpaRepository<Position, BigInteger> {
 
-    Optional<Position> findPositionsByIdAndAmountIsAfterOrAmountEquals(BigInteger id, BigDecimal amount,BigDecimal amount2);
+    @Modifying
+    @Query("update Position p set p.amount = p.amount - :amount where p.id = :id")
+    Optional<Position> updatePositionAmount(@Param("id") BigInteger positionId, @Param("amount") BigDecimal amount);
 }
