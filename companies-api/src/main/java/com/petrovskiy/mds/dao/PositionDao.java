@@ -19,4 +19,5 @@ public interface PositionDao extends JpaRepository<Position, BigInteger> {
     @Modifying
     @Query("update Position p set p.amount = p.amount - :amount where p.id = :id")
     void updatePositionAmount(@Param("id") BigInteger positionId, @Param("amount") BigDecimal amount);
+
 }
