@@ -1,5 +1,6 @@
 package com.petrovskiy.mds.service.impl;
 
+import com.petrovskiy.mds.model.UserTransaction;
 import com.petrovskiy.mds.service.dto.ResponseTransactionDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,9 +16,9 @@ public class TopicProducer {
     @Value("${topic.name.producer}")
     private String topicName;
 
-    private final KafkaTemplate<String, ResponseTransactionDto> kafkaTemplate;
+    private final KafkaTemplate<String, UserTransaction> kafkaTemplate;
 
-    public void send(ResponseTransactionDto message){
+    public void send(UserTransaction message){
         log.info("Send MESSAGE: {}" ,message);
         kafkaTemplate.send(topicName, message);
     }

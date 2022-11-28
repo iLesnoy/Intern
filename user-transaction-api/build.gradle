@@ -43,6 +43,8 @@ dependencies {
 
     implementation 'io.springfox:springfox-swagger-ui:2.9.2'
     implementation 'org.springframework.kafka:spring-kafka:2.9.2'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.14.0'
+
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
