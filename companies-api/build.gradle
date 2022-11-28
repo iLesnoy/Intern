@@ -39,6 +39,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.keycloak:keycloak-spring-boot-starter:18.0.0'
     implementation 'org.springframework.kafka:spring-kafka:2.9.2'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.14.0'
 
 
     compileOnly 'org.projectlombok:lombok'

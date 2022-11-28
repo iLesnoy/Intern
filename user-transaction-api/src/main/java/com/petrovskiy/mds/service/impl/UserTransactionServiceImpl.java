@@ -4,12 +4,11 @@ import com.petrovskiy.mds.dao.UserTransactionDao;
 import com.petrovskiy.mds.model.Order;
 import com.petrovskiy.mds.model.UserTransaction;
 import com.petrovskiy.mds.service.OrderService;
-import com.petrovskiy.mds.service.PositionFeignClient;
 import com.petrovskiy.mds.service.UserFeignClient;
 import com.petrovskiy.mds.service.UserTransactionService;
+import com.petrovskiy.mds.service.dto.OrderStatus;
 import com.petrovskiy.mds.service.dto.ResponseTransactionDto;
 import com.petrovskiy.mds.service.dto.UserDto;
-import com.petrovskiy.mds.service.mapper.PositionMapper;
 import com.petrovskiy.mds.service.mapper.impl.UserTransactionMapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,23 +20,17 @@ public class UserTransactionServiceImpl implements UserTransactionService {
     private final UserTransactionMapperImpl mapper;
     private final OrderService orderService;
     private final UserTransactionDao transactionDao;
-    private final PositionFeignClient positionService;
     private final TopicProducer topicProducer;
     private final UserFeignClient userService;
-    private final PositionMapper positionMapper;
 
     @Autowired
     public UserTransactionServiceImpl(UserTransactionMapperImpl mapper, OrderService orderService, UserTransactionDao transactionDao,
-                                      PositionFeignClient positionService,
-                                      TopicProducer topicProducer, UserFeignClient userService,
-                                      PositionMapper positionMapper) {
+                                      TopicProducer topicProducer, UserFeignClient userService) {
         this.mapper = mapper;
         this.orderService = orderService;
         this.transactionDao = transactionDao;
-        this.positionService = positionService;
         this.topicProducer = topicProducer;
         this.userService = userService;
-        this.positionMapper = positionMapper;
     }
 
     @Transactional
@@ -46,14 +39,17 @@ public class UserTransactionServiceImpl implements UserTransactionService {
 
         Order order = orderService.findById(userTransaction.getOrder().getId());
         UserDto user = userService.findById(order.getUserId());
+        setOrderStatus(userTransaction);
 
-        UserTransaction transaction = transactionDao.save(userTransaction);
-        ResponseTransactionDto responseTransactionDto = mapper.transactionToDto(transaction, user, order);
-        topicProducer.send(responseTransactionDto);
+        UserTransaction createdTransaction = transactionDao.save(userTransaction);
+        topicProducer.send(createdTransaction);
 
-        return responseTransactionDto;
+        return mapper.transactionToDto(createdTransaction, user, order);
     }
 
+    void setOrderStatus(UserTransaction userTransaction){
+        userTransaction.setOrderStatus(OrderStatus.IN_PROGRESS);
+    }
 
 
 }

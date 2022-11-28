@@ -17,12 +17,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 
-@Getter
-@Setter
-@ToString
-@Builder
-@EqualsAndHashCode
 @NoArgsConstructor
+@AllArgsConstructor
+@Data
+@Builder
 @Entity
 @Table(name="user_transaction")
 public class UserTransaction {
