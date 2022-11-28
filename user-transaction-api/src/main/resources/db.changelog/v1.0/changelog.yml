@@ -1,0 +1,88 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1667124635899-6
+      author: Developer
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: userTransaction_pkey
+                  name: id
+                  type: UUID
+              - column:
+                  constraints:
+                    nullable: false
+                  name: transactionDate
+                  type: TIMESTAMP WITHOUT TIME ZONE
+              - column:
+                  constraints:
+                    nullable: false
+                  name: order_id
+                  type: numeric(19, 2)
+            tableName: userTransaction
+
+  - changeSet:
+      id: 1667124635899-8
+      author: Developer
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: order_id
+            baseTableName: user_transaction
+            constraintName: transaction_order
+            deferrable: false
+            initiallyDeferred: false
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: order
+            validate: true
+
+  - changeSet:
+      id: 1667124635989-9
+      author: Developer
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: order_pkey
+                  name: id
+                  type: bigint
+              - column:
+                  constraints:
+                    nullable: false
+                  name: amount
+                  type: Long
+              - column:
+                  constraints:
+                    nullable: false
+                  name: userId
+                  type: UUID
+            tableName: orders
+
+  - changeSet:
+      id: 1667124635889-8
+      author: Developer
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: transaction_id
+            baseTableName: orders
+            constraintName: order_transaction
+            deferrable: false
+            initiallyDeferred: false
+            onDelete: NO ACTION
+            onUpdate: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: user_transaction
+            validate: true
+
+
+
+
+
+

@@ -1,6 +1,9 @@
 package com.petrovskiy.mds.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
@@ -10,7 +13,10 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
+@Builder
 @Entity
 @Table(name = "position")
 public class Position {
@@ -20,7 +26,7 @@ public class Position {
     private BigInteger id;
 
     @Column(name = "created_by", nullable = false)
-    private String created_by;
+    private String createdBy;
 
     @Column(name = "created", nullable = false)
     private LocalDateTime created;
@@ -34,6 +40,7 @@ public class Position {
 
     @JoinColumn(name = "company_id")
     private BigInteger companyId;
+
 
     @PrePersist
     private void PrePersist(){
