@@ -6,6 +6,7 @@ import com.petrovskiy.mds.service.dto.ItemDto;
 import com.petrovskiy.mds.service.exception.SystemException;
 import org.junit.ClassRule;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +33,7 @@ class ItemServiceImplTest extends AbstractCacheTest{
     public static PostgreSQLContainer postgreSQLContainer = PostgreTestContainer.getInstance();
 
     @Autowired
-    private ItemService itemService;
+    private ItemServiceImpl itemService;
 
     @BeforeEach
     private void init(){
@@ -53,6 +54,16 @@ class ItemServiceImplTest extends AbstractCacheTest{
                 .build();
     }
 
+    @Order(1)
+    @Test
+    public void create() {
+        createAndPrint(expected);
+        createAndPrint(expected2);
+        log.info("all entries are below:");
+        itemService.findAll(Pageable.ofSize(2)).forEach(u -> log.info("{}", u.toString()));
+    }
+
+    @Order(2)
     @Test
     void findById() {
         ItemDto itemDto = itemService.create(this.expected);
@@ -64,19 +75,11 @@ class ItemServiceImplTest extends AbstractCacheTest{
     }
 
     @Test
-    public void create() {
-        createAndPrint(expected);
-        createAndPrint(expected2);
-        log.info("all entries are below:");
-        itemService.findAll(Pageable.ofSize(2)).forEach(u -> log.info("{}", u.toString()));
-    }
-
-    @Test
     public void createAndRefresh() {
-        itemService.create(this.expected);
+        itemService.createAndRefresh(this.expected);
         log.info("created item: {}", expected);
 
-        itemService.create(this.expected2);
+        itemService.createAndRefresh(this.expected2);
         log.info("created item2: {}", expected2);
 
     }

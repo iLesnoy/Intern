@@ -11,6 +11,7 @@ import com.petrovskiy.mds.service.validation.PageValidation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -46,6 +47,14 @@ public class CategoryServiceImpl implements CategoryService {
         });
         Category category = categoryMapper.dtoToEntity(categoryDto);
         return categoryMapper.entityToDto(categoryDao.save(category));
+    }
+
+    @Transactional
+    @CachePut(value = "categories", key = "#categoryDto.name")
+    public CategoryDto createAndRefresh(CategoryDto categoryDto) {
+        log.info("creating category : {}", categoryDto);
+        Category category = categoryDao.save(categoryMapper.dtoToEntity(categoryDto));
+        return categoryMapper.entityToDto(category);
     }
 
     @Transactional
