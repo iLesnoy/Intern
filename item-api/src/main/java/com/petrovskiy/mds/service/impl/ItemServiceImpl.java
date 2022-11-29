@@ -9,17 +9,22 @@ import com.petrovskiy.mds.service.dto.ItemDto;
 import com.petrovskiy.mds.service.exception.SystemException;
 import com.petrovskiy.mds.service.mapper.ItemMapper;
 import com.petrovskiy.mds.service.validation.PageValidation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.springframework.cache.annotation.Cacheable;
 import java.util.UUID;
 
 import static com.petrovskiy.mds.service.exception.ExceptionCode.NON_EXISTENT_ENTITY;
 import static com.petrovskiy.mds.service.exception.ExceptionCode.NON_EXISTENT_PAGE;
 
+@Slf4j
 @Service
 public class ItemServiceImpl implements ItemService {
 
@@ -39,8 +44,20 @@ public class ItemServiceImpl implements ItemService {
 
 
     @Transactional
+    @Cacheable(value = "items", key = "#itemDto.name")
     @Override
     public ItemDto create(ItemDto itemDto) {
+        log.info("creating item : {}", itemDto);
+        CategoryDto categoryDto = categoryService.findById(itemDto.getCategoryDto().getId());
+        setCategoryToItem(itemDto,categoryDto);
+        Item item  =  itemDao.save(itemMapper.dtoToEntity(itemDto));
+        return itemMapper.entityToDto(item);
+    }
+
+    @Transactional
+    @CachePut(value = "items", key = "#itemDto.name")
+    public ItemDto createAndRefresh(ItemDto itemDto) {
+        log.info("creating item : {}", itemDto);
         CategoryDto categoryDto = categoryService.findById(itemDto.getCategoryDto().getId());
         setCategoryToItem(itemDto,categoryDto);
         Item item  =  itemDao.save(itemMapper.dtoToEntity(itemDto));
@@ -59,7 +76,10 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    @Cacheable("items")
     public ItemDto findById(UUID id) {
+        log.info("getting item by id: {}", id);
         Item item =  itemDao.findById(id).orElseThrow(()->new SystemException(NON_EXISTENT_ENTITY));
         return itemMapper.entityToDto(item);
     }
@@ -75,6 +95,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    @CacheEvict("items")
     public void delete(UUID id) {
         itemDao.findById(id).ifPresentOrElse(item ->
             itemDao.deleteById(item.getId())

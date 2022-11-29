@@ -8,7 +8,10 @@ import com.petrovskiy.mds.service.dto.CustomPage;
 import com.petrovskiy.mds.service.exception.SystemException;
 import com.petrovskiy.mds.service.mapper.CategoryMapper;
 import com.petrovskiy.mds.service.validation.PageValidation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,7 @@ import java.math.BigInteger;
 
 import static com.petrovskiy.mds.service.exception.ExceptionCode.*;
 
+@Slf4j
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
@@ -34,6 +38,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Transactional
+    @Cacheable(value = "categories", key = "#categoryDto.name")
     @Override
     public CategoryDto create(CategoryDto categoryDto) {
         categoryDao.findByName(categoryDto.getName()).ifPresent(a -> {
@@ -51,7 +56,10 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    @Cacheable("categories")
     public CategoryDto findById(BigInteger id) {
+        log.info("getting category by id: {}", id);
         Category category = categoryDao.findById(id).orElseThrow(() -> new SystemException(NON_EXISTENT_ENTITY));
         return categoryMapper.entityToDto(category);
     }
@@ -67,6 +75,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Transactional
+    @CacheEvict("categories")
     @Override
     public void delete(BigInteger id) {
         findById(id);
