@@ -1,19 +1,16 @@
 package com.petrovskiy.mds.service.impl;
 
-import com.petrovskiy.mds.PostgreTestContainer;
 import com.petrovskiy.mds.model.Role;
 import com.petrovskiy.mds.service.dto.CompanyDto;
 import com.petrovskiy.mds.service.dto.UserDto;
 import com.petrovskiy.mds.service.exception.SystemException;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.utility.DockerImageName;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -27,8 +24,13 @@ class UserServiceImplTest extends AbstractCacheTest{
     private CompanyDto companyDto;
     private Logger log = LoggerFactory.getLogger(UserServiceImplTest.class);
 
-    @ClassRule
-    public static PostgreSQLContainer postgreSQLContainer = PostgreTestContainer.getInstance();
+    static {
+        GenericContainer<?> redis =
+                new GenericContainer<>(DockerImageName.parse("redis:5.0.3-alpine")).withExposedPorts(6379);
+        redis.start();
+        System.setProperty("spring.redis.host", redis.getHost());
+        System.setProperty("spring.redis.port", redis.getMappedPort(6379).toString());
+    }
 
     @Autowired
     private UserServiceImpl service;
@@ -57,33 +59,38 @@ class UserServiceImplTest extends AbstractCacheTest{
                 .build();
     }
 
-    @Order(1)
     @Test
     public void create() {
-        createAndPrint(expected);
-        createAndPrint(expected2);
-        log.info("all entries are below:");
-        service.findAll(Pageable.ofSize(2)).forEach(u -> log.info("{}", u.toString()));
+        UserDto userDto = service.create(expected);
+        assertEquals(userDto.getName(),expected.getName());
     }
 
-    @Order(2)
     @Test
     void findById() {
-        UserDto userDto = service.create(this.expected);
+        UserDto userDto  = service.create(expected);
         getAndPrint(userDto.getId());
-        getAndPrint(userDto.getId());
-        getAndPrint(userDto.getId());
+        UserDto expected = service.findById(userDto.getId());
         assertEquals(userDto.getName(), expected.getName());
     }
 
     @Test
+    void findByIdNonExist() {
+        UserDto userDto = service.create(this.expected);
+        getAndPrint(userDto.getId());
+        SystemException systemException = assertThrows(
+                SystemException.class,
+                () -> {
+                    service.findById(UUID.randomUUID());
+                }
+        );
+        assertNotNull(systemException);
+    }
+
+    @Test
     public void createAndRefresh() {
-        UserDto userDto1 = service.createAndRefresh(this.expected);
-        log.info("created user: {}", userDto1);
-
-        UserDto userDto = service.createAndRefresh(this.expected2);
-        log.info("created user2: {}", userDto);
-
+        UserDto refresh = service.createAndRefresh(this.expected);
+        log.info("created user: {}", expected);
+        assertEquals(refresh.getName(),expected.getName());
     }
 
     @Test

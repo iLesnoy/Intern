@@ -5,13 +5,14 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Builder;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Builder
 @Data
 @JsonPropertyOrder({"id", "name","description", "created","category"})
-public class ItemDto {
+public class ItemDto implements Serializable {
 
     @JsonProperty("id")
     private UUID id;

@@ -1,18 +1,15 @@
 package com.petrovskiy.mds.service.impl;
 
-import com.petrovskiy.mds.service.CategoryService;
 import com.petrovskiy.mds.service.dto.CategoryDto;
 import com.petrovskiy.mds.service.dto.ItemDto;
 import com.petrovskiy.mds.service.exception.SystemException;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.utility.DockerImageName;
 
 import java.math.BigInteger;
 import java.time.LocalDateTime;
@@ -29,11 +26,16 @@ class CategoryServiceImplTest extends AbstractCacheTest {
     private CategoryDto expected2;
     private Logger log = LoggerFactory.getLogger(ItemServiceImplTest.class);
 
-    @ClassRule
-    public static PostgreSQLContainer postgreSQLContainer = PostgreTestContainer.getInstance();
-
     @Autowired
     private CategoryServiceImpl service;
+
+    static {
+        GenericContainer<?> redis =
+                new GenericContainer<>(DockerImageName.parse("redis:5.0.3-alpine")).withExposedPorts(6379);
+        redis.start();
+        System.setProperty("spring.redis.host", redis.getHost());
+        System.setProperty("spring.redis.port", redis.getMappedPort(6379).toString());
+    }
 
     @BeforeEach
     private void init(){
@@ -44,8 +46,8 @@ class CategoryServiceImplTest extends AbstractCacheTest {
                 .build();
         expected2 = CategoryDto.builder()
                 .id(BigInteger.TWO)
-                .description("test")
-                .name("test2").parentCategory("test")
+                .description("test2")
+                .name("testTwo2").parentCategory("test")
                 .build();
         item1 = ItemDto.builder()
                 .id(UUID.randomUUID())
@@ -59,34 +61,38 @@ class CategoryServiceImplTest extends AbstractCacheTest {
                 .build();
     }
 
-    @Order(1)
     @Test
     public void create() {
-        createAndPrint(expected);
-        createAndPrint(expected2);
-        log.info("all entries are below:");
-        service.findAll(Pageable.ofSize(2)).forEach(u -> log.info("{}", u.toString()));
+        CategoryDto categoryDto = service.create(expected);
+        assertEquals(categoryDto.getName(),expected.getName());
     }
 
-    @Order(2)
     @Test
     void findById() {
-        CategoryDto categoryDto = service.create(this.expected);
+        CategoryDto categoryDto = service.create(expected);
         getAndPrint(categoryDto.getId());
-        getAndPrint(categoryDto.getId());
-        getAndPrint(categoryDto.getId());
-        getAndPrint(categoryDto.getId());
+        CategoryDto expected = service.findById(categoryDto.getId());
         assertEquals(categoryDto.getName(), expected.getName());
     }
 
     @Test
+    void findByIdNonExist() {
+        CategoryDto categoryDto = service.create(this.expected);
+        getAndPrint(categoryDto.getId());
+        SystemException systemException = assertThrows(
+                SystemException.class,
+                () -> {
+                    service.findById(BigInteger.valueOf(1000));
+                }
+        );
+        assertNotNull(systemException);
+    }
+
+    @Test
     public void createAndRefresh() {
-        service.createAndRefresh(this.expected);
-        log.info("created item: {}", item1);
-
-        service.createAndRefresh(this.expected2);
-        log.info("created item2: {}", item2);
-
+        CategoryDto refresh = service.createAndRefresh(this.expected);
+        log.info("created category: {}", expected);
+        assertEquals(refresh.getName(),expected.getName());
     }
 
     @Test
@@ -97,8 +103,8 @@ class CategoryServiceImplTest extends AbstractCacheTest {
         CategoryDto categoryDto = service.create(expected2);
         log.info("{}", service.findById(categoryDto.getId()));
 
-        service.delete(categoryDto.getId());
         service.delete(categoryDto1.getId());
+        service.delete(categoryDto.getId());
         SystemException systemException = assertThrows(
                 SystemException.class,
                 () -> {

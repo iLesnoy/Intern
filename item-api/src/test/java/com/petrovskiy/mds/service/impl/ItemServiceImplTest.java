@@ -1,18 +1,15 @@
 package com.petrovskiy.mds.service.impl;
 
-import com.petrovskiy.mds.service.ItemService;
 import com.petrovskiy.mds.service.dto.CategoryDto;
 import com.petrovskiy.mds.service.dto.ItemDto;
 import com.petrovskiy.mds.service.exception.SystemException;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.utility.DockerImageName;
 
 import java.math.BigInteger;
 import java.time.LocalDateTime;
@@ -29,11 +26,18 @@ class ItemServiceImplTest extends AbstractCacheTest{
     private CategoryDto categoryDto;
     private Logger log = LoggerFactory.getLogger(ItemServiceImplTest.class);
 
-    @ClassRule
-    public static PostgreSQLContainer postgreSQLContainer = PostgreTestContainer.getInstance();
-
     @Autowired
     private ItemServiceImpl itemService;
+    @Autowired
+    private CategoryServiceImpl categoryService;
+
+    static {
+        GenericContainer<?> redis =
+                new GenericContainer<>(DockerImageName.parse("redis:5.0.3-alpine")).withExposedPorts(6379);
+        redis.start();
+        System.setProperty("spring.redis.host", redis.getHost());
+        System.setProperty("spring.redis.port", redis.getMappedPort(6379).toString());
+    }
 
     @BeforeEach
     private void init(){
@@ -42,6 +46,7 @@ class ItemServiceImplTest extends AbstractCacheTest{
                 .description("test")
                 .name("test").parentCategory("test")
                 .build();
+        categoryService.create(categoryDto);
         expected = ItemDto.builder()
                 .id(UUID.randomUUID())
                 .categoryDto(categoryDto).created(LocalDateTime.now())
@@ -54,41 +59,36 @@ class ItemServiceImplTest extends AbstractCacheTest{
                 .build();
     }
 
-    @Order(1)
     @Test
     public void create() {
-        createAndPrint(expected);
-        createAndPrint(expected2);
-        log.info("all entries are below:");
-        itemService.findAll(Pageable.ofSize(2)).forEach(u -> log.info("{}", u.toString()));
-    }
-
-    @Order(2)
-    @Test
-    void findById() {
-        ItemDto itemDto = itemService.create(this.expected);
-        getAndPrint(itemDto.getId());
-        getAndPrint(itemDto.getId());
-        getAndPrint(itemDto.getId());
-        getAndPrint(itemDto.getId());
+        ItemDto itemDto = itemService.create(expected);
         assertEquals(itemDto.getName(),expected.getName());
     }
 
     @Test
+    void findByIdNonExist() {
+        ItemDto itemDto = itemService.create(this.expected);
+        getAndPrint(itemDto.getId());
+        SystemException systemException = assertThrows(
+                SystemException.class,
+                () -> {
+                    ItemDto actual = itemService.findById(UUID.randomUUID());
+                }
+        );
+        assertNotNull(systemException);
+    }
+
+    @Test
     public void createAndRefresh() {
-        itemService.createAndRefresh(this.expected);
+        ItemDto refresh = itemService.createAndRefresh(this.expected);
         log.info("created item: {}", expected);
-
-        itemService.createAndRefresh(this.expected2);
-        log.info("created item2: {}", expected2);
-
+        assertEquals(refresh.getName(),expected.getName());
     }
 
     @Test
     public void delete() {
         ItemDto itemDto = itemService.create(expected);
         log.info("{}", itemService.findById(itemDto.getId()));
-
         ItemDto itemDto2 = itemService.create(expected2);
         log.info("{}", itemService.findById(itemDto2.getId()));
 

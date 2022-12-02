@@ -37,6 +37,7 @@ dependencies {
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-ribbon', version: '2.2.8.RELEASE'
 
     implementation 'org.springframework.boot:spring-boot-starter-cache'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis:2.7.4'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
@@ -48,6 +49,8 @@ dependencies {
     testImplementation 'org.testcontainers:testcontainers:1.17.3'
     testImplementation "org.testcontainers:postgresql:1.17.5"
     testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: '1.17.3'
+    testImplementation 'org.testcontainers:testcontainers:1.17.3'
+
 
     liquibaseRuntime 'org.liquibase:liquibase-core:3.8.9'
     liquibaseRuntime("ch.qos.logback:logback-core:1.2.3")

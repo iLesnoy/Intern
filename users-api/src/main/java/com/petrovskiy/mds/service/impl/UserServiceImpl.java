@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional(readOnly = true)
-    @Cacheable("users")
+    @CachePut(value = "users", key = "#id")
     @Override
     public UserDto findById(UUID id) {
         log.info("getting user by id: {}", id);
