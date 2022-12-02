@@ -15,7 +15,9 @@ import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CategoryServiceImplTest extends AbstractCacheTest {
 
@@ -113,10 +115,6 @@ class CategoryServiceImplTest extends AbstractCacheTest {
                 }
         );
         assertNotNull(systemException);
-    }
-
-    private void createAndPrint(CategoryDto categoryDto) {
-        log.info("created category: {}", service.create(categoryDto));
     }
 
     private void getAndPrint(BigInteger id) {

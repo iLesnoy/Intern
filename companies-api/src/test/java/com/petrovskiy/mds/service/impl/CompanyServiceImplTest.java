@@ -12,7 +12,10 @@ import org.testcontainers.utility.DockerImageName;
 
 import java.math.BigInteger;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 
 class CompanyServiceImplTest extends AbstractCacheTest{
 
@@ -92,10 +95,6 @@ class CompanyServiceImplTest extends AbstractCacheTest{
                 }
         );
         assertNotNull(systemException);
-    }
-
-    private void createAndPrint(CompanyDto companyDto) {
-        log.info("created company: {}", service.create(companyDto));
     }
 
     private void getAndPrint(BigInteger id) {

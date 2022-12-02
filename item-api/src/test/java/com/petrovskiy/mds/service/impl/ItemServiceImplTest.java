@@ -15,7 +15,9 @@ import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 class ItemServiceImplTest extends AbstractCacheTest{
@@ -102,10 +104,6 @@ class ItemServiceImplTest extends AbstractCacheTest{
                 }
         );
         assertNotNull(systemException);
-    }
-
-    private void createAndPrint(ItemDto itemDto) {
-        log.info("created user: {}", itemService.create(itemDto));
     }
 
     private void getAndPrint(UUID id) {
