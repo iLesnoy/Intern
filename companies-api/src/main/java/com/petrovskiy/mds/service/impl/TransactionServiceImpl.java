@@ -9,7 +9,6 @@ import com.petrovskiy.mds.service.TransactionService;
 import com.petrovskiy.mds.service.dto.OrderStatus;
 import com.petrovskiy.mds.service.dto.PositionDto;
 import com.petrovskiy.mds.service.dto.TransactionResult;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -22,7 +21,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
-@RequiredArgsConstructor
 @Service
 public class TransactionServiceImpl implements TransactionService {
 

@@ -2,11 +2,13 @@ package com.petrovskiy.mds.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.Pattern;
 import java.math.BigInteger;
 
+@Builder
 @Data
 @JsonPropertyOrder({"id", "name","parentCategory", "description"})
 public class CategoryDto {
