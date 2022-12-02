@@ -1,9 +1,12 @@
-package com.petrovskiy.mds.service.impl;
+package com.petrovskiy.mds;
+
 
 import com.petrovskiy.mds.model.Role;
 import com.petrovskiy.mds.service.dto.CompanyDto;
 import com.petrovskiy.mds.service.dto.UserDto;
 import com.petrovskiy.mds.service.exception.SystemException;
+import com.petrovskiy.mds.service.impl.AbstractCacheTest;
+import com.petrovskiy.mds.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -12,12 +15,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.utility.DockerImageName;
 
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class UserServiceImplTest extends AbstractCacheTest{
+class UserServiceImplTest extends AbstractCacheTest {
 
     private UserDto expected;
     private UserDto expected2;
@@ -31,6 +37,7 @@ class UserServiceImplTest extends AbstractCacheTest{
         System.setProperty("spring.redis.host", redis.getHost());
         System.setProperty("spring.redis.port", redis.getMappedPort(6379).toString());
     }
+
 
     @Autowired
     private UserServiceImpl service;
@@ -62,13 +69,12 @@ class UserServiceImplTest extends AbstractCacheTest{
     @Test
     public void create() {
         UserDto userDto = service.create(expected);
-        assertEquals(userDto.getName(),expected.getName());
+        assertEquals(userDto.getName(), expected.getName());
     }
 
     @Test
     void findById() {
-        UserDto userDto  = service.create(expected);
-        getAndPrint(userDto.getId());
+        UserDto userDto = service.create(expected);
         UserDto expected = service.findById(userDto.getId());
         assertEquals(userDto.getName(), expected.getName());
     }
@@ -86,11 +92,12 @@ class UserServiceImplTest extends AbstractCacheTest{
         assertNotNull(systemException);
     }
 
+
     @Test
     public void createAndRefresh() {
         UserDto refresh = service.createAndRefresh(this.expected);
         log.info("created user: {}", expected);
-        assertEquals(refresh.getName(),expected.getName());
+        assertEquals(refresh.getName(), expected.getName());
     }
 
     @Test
@@ -111,10 +118,6 @@ class UserServiceImplTest extends AbstractCacheTest{
                 }
         );
         assertNotNull(systemException);
-    }
-
-    private void createAndPrint(UserDto userDto) {
-        log.info("created user: {}", service.create(userDto));
     }
 
     private void getAndPrint(UUID id) {
