@@ -1,42 +1,38 @@
 package com.petrovskiy.mds.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 
-import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-
+@Builder
 @Data
-@Entity
-@Table(name = "position")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Position {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
     private BigInteger id;
 
-    @Column(name = "created_by", nullable = false)
     private String created_by;
 
-    @Column(name = "created", nullable = false)
+    @NotNull
     private LocalDateTime created;
 
-    @Column(name = "amount", nullable = false)
     @DecimalMin("0.1")
     private BigDecimal amount;
 
-    @JoinColumn(name = "item_id")
+    @NotNull
     private UUID itemId;
 
-    @JoinColumn(name = "company_id")
+    @NotNull
     private BigInteger companyId;
-
-    @PrePersist
-    private void PrePersist(){
-        created = LocalDateTime.now();
-    }
 }

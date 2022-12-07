@@ -28,19 +28,19 @@ ext {
 
 dependencies {
     implementation 'org.hibernate:hibernate-validator:8.0.0.Final'
-    implementation 'org.postgresql:postgresql:42.5.0'
     implementation "org.mapstruct:mapstruct:${mapstructVersion}", "org.projectlombok:lombok:${lombokVersion}"
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}", "org.projectlombok:lombok:${lombokVersion}", "org.projectlombok:lombok-mapstruct-binding:${lombokMapstructBindingVersion}"
 
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.keycloak:keycloak-spring-boot-starter:18.0.0'
     implementation 'org.springframework.boot:spring-boot-starter-cache'
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis-reactive:2.7.5'
     implementation 'redis.clients:jedis:3.1.0'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux:3.0.0'
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive:2.7.5'
 
 
     compileOnly 'org.projectlombok:lombok'
@@ -48,17 +48,8 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: '1.17.3'
     testImplementation 'org.testcontainers:testcontainers:1.17.3'
-    testImplementation "org.testcontainers:postgresql:1.17.5"
+    testImplementation "org.testcontainers:mongodb:1.17.6"
 
-    liquibaseRuntime 'org.liquibase:liquibase-core:3.8.9'
-    liquibaseRuntime("ch.qos.logback:logback-core:1.2.3")
-    liquibaseRuntime("ch.qos.logback:logback-classic:1.2.3")
-    liquibaseRuntime 'org.postgresql:postgresql'
-    liquibaseRuntime 'org.liquibase.ext:liquibase-hibernate5:3.6'
-    liquibaseRuntime 'org.springframework.data:spring-data-jpa'
-    liquibaseRuntime 'org.springframework.boot:spring-boot'
-    liquibaseRuntime sourceSets.main.output
-    liquibaseRuntime 'javax.xml.bind:jaxb-api:2.3.1'
 }
 
 dependencyManagement {
@@ -67,19 +58,7 @@ dependencyManagement {
     }
 }
 
-liquibase {
-    activities {
-        main {
-            changeLogFile "$buildDir/changelog.xml"
-            url 'jdbc:postgresql://localhost:5432/agreg'
-            username 'root'
-            password '12345'
-            driver 'org.postgresql.Driver'
-            referenceUrl 'hibernate:spring:entity?dialect=org.hibernate.dialect.PostgreSQL10Dialect&hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy'
-        }
-        runList = "main"
-    }
-}
+
 
 tasks.named('test') {
     useJUnitPlatform()

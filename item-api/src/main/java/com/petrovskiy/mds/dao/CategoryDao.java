@@ -1,12 +1,14 @@
 package com.petrovskiy.mds.dao;
 
 import com.petrovskiy.mds.model.Category;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
 import java.util.Optional;
 
-public interface CategoryDao extends JpaRepository<Category, BigInteger> {
-    Optional<Category> findByName(String name);
-
+public interface CategoryDao extends ReactiveMongoRepository<Category, String> {
+    Mono<Optional<Category>> findByName(String name);
+    Flux<Category> findAll(Pageable page);
 }

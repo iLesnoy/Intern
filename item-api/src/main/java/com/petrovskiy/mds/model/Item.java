@@ -1,44 +1,46 @@
 package com.petrovskiy.mds.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.redis.core.RedisHash;
 
-import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.math.BigInteger;
 import java.time.LocalDateTime;
-import java.util.UUID;
+import java.util.List;
 
 @RedisHash("items")
 @Data
-@Entity
-@Table(name = "item")
+@Document("item")
 public class Item implements Serializable {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
-    private UUID id;
+    @NotNull
+    private String id;
 
-    @Column(name = "name", nullable = false)
+    @Field(name = "name")
+    @NotNull
     private String name;
 
-    @Column(name = "description")
+    @Field(name = "description")
     private String description;
 
-    @Column(name = "created", nullable = false)
+    @Field(name = "created")
+    @NotNull
+    @CreatedDate
     private LocalDateTime created;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
+    private String categoryId;
 
-    @JoinColumn(name = "position_id")
-    private BigInteger positionId;
-
-    @PrePersist
-    private void PrePersist(){
-        created = LocalDateTime.now();
-    }
+    @DBRef
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private List<Position> positions;
 
 }

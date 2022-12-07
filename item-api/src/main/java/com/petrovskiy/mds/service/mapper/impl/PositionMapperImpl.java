@@ -7,6 +7,8 @@ import com.petrovskiy.mds.service.dto.PositionDto;
 import com.petrovskiy.mds.service.mapper.PositionMapper;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Component
 public class PositionMapperImpl implements PositionMapper {
 
@@ -30,7 +32,7 @@ public class PositionMapperImpl implements PositionMapper {
         position.setCreated(positionDto.getCreated());
         position.setAmount(positionDto.getAmount());
         position.setCompanyId(positionDto.getCompanyDto().getId());
-        position.setItemId(positionDto.getItemDto().getId());
+        position.setItemId(UUID.fromString(positionDto.getItemDto().getId()));
         return position;
     }
 }

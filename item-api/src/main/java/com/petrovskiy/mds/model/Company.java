@@ -1,36 +1,35 @@
 package com.petrovskiy.mds.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 
-import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 
-
+@Builder
 @Data
-@Entity
-@Table(name = "company")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Company {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
     private BigInteger id;
 
-    @Column(name = "name", nullable = false, unique = true)
+    @NotNull
+    @NotEmpty
     private String name;
 
-    @Column(name = "email", nullable = false)
+    @NotNull
     private String email;
 
-    @Column(name = "created", nullable = false)
+    @NotNull
     private LocalDateTime created;
 
-    @Column(name = "description", nullable = false)
     private String description;
 
-    @PrePersist
-    private void PrePersist(){
-        created = LocalDateTime.now();
-    }
 }
