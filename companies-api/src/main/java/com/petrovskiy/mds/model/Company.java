@@ -1,15 +1,20 @@
 package com.petrovskiy.mds.model;
 
+import lombok.Builder;
 import lombok.Data;
+import org.springframework.data.redis.core.RedisHash;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 
+@RedisHash("companies")
+@Builder
 @Data
 @Entity
 @Table(name = "company")
-public class Company {
+public class Company implements Serializable {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)

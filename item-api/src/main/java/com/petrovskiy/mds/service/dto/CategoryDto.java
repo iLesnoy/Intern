@@ -6,12 +6,13 @@ import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.Pattern;
+import java.io.Serializable;
 import java.math.BigInteger;
 
 @Builder
 @Data
 @JsonPropertyOrder({"id", "name","parentCategory", "description"})
-public class CategoryDto {
+public class CategoryDto implements Serializable {
 
     @JsonProperty("id")
     private BigInteger id;

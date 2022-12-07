@@ -2,14 +2,17 @@ package com.petrovskiy.mds.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import lombok.Builder;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 
+@Builder
 @Data
 @JsonPropertyOrder({"id", "name","email", "created","description"})
-public class CompanyDto {
+public class CompanyDto implements Serializable {
 
     @JsonProperty("id")
     private BigInteger id;
@@ -26,3 +29,4 @@ public class CompanyDto {
     @JsonProperty("description")
     private String description;
 }
+
