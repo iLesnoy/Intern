@@ -36,8 +36,8 @@ public class ItemController {
     }
 
     @GetMapping
-    public Flux<ItemDto> findAll(Pageable pageable) {
-        return itemService.findAll(pageable);
+    public Flux<ItemDto> findAll() {
+        return itemService.findAll();
     }
 
     @DeleteMapping("{id}")

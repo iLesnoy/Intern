@@ -32,7 +32,7 @@ public class PositionMapperImpl implements PositionMapper {
         position.setCreated(positionDto.getCreated());
         position.setAmount(positionDto.getAmount());
         position.setCompanyId(positionDto.getCompanyDto().getId());
-        position.setItemId(UUID.fromString(positionDto.getItemDto().getId()));
+        position.setItemId(positionDto.getItemDto().getId());
         return position;
     }
 }

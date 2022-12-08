@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class PositionDto {
 
     @JsonProperty("id")
-    private BigInteger id;
+    private String id;
 
     @JsonProperty("createdBy")
     private String created_by;

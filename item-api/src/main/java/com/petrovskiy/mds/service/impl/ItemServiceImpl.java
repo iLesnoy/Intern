@@ -51,7 +51,7 @@ public class ItemServiceImpl implements ItemService {
 
         return categoryService.findById(itemDto.getCategoryId())
                 .switchIfEmpty(Mono.error(new SystemException(NON_EXISTENT_ENTITY)))
-                .then(itemDao.save(item))
+                .then(itemDao.create(item))
                 .map(itemMapper::entityToDto);
     }
 
@@ -65,7 +65,7 @@ public class ItemServiceImpl implements ItemService {
 
         return categoryService.findById(itemDto.getCategoryId())
                 .switchIfEmpty(Mono.error(new SystemException(NON_EXISTENT_ENTITY)))
-                .then(itemDao.save(item))
+                .then(itemDao.create(item))
                 .map(itemMapper::entityToDto);
 
     }
@@ -80,7 +80,7 @@ public class ItemServiceImpl implements ItemService {
         Item item = itemMapper.dtoToEntity(itemDto);
         return itemDao.findById(id)
                 .switchIfEmpty(Mono.error(new SystemException(NON_EXISTENT_ENTITY)))
-                .then(itemDao.save(item))
+                .then(itemDao.create(item))
                 .map(itemMapper::entityToDto);
     }
 
@@ -95,8 +95,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Flux<ItemDto> findAll(Pageable pageable) {
-        return itemDao.findAll(pageable)
+    public Flux<ItemDto> findAll() {
+        return itemDao.findAll()
                 .map(itemMapper::entityToDto);
     }
 
@@ -104,6 +104,6 @@ public class ItemServiceImpl implements ItemService {
     @CacheEvict("items")
     public void delete(String id) {
         findById(id)
-                .then(itemDao.deleteById(id));
+                .then(itemDao.delete(id));
     }
 }

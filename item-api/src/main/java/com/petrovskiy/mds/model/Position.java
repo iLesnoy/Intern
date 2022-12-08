@@ -20,7 +20,7 @@ import java.util.UUID;
 public class Position {
 
     @Id
-    private BigInteger id;
+    private String id;
 
     private String created_by;
 
@@ -31,7 +31,7 @@ public class Position {
     private BigDecimal amount;
 
     @NotNull
-    private UUID itemId;
+    private String itemId;
 
     @NotNull
     private BigInteger companyId;

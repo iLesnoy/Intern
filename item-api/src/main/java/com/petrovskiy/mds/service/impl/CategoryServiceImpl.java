@@ -40,7 +40,7 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = categoryMapper.dtoToEntity(categoryDto);
         return categoryDao.findByName(categoryDto.getName())
                 .switchIfEmpty(Mono.error(new SystemException(DUPLICATE_NAME)))
-                .then(categoryDao.save(category))
+                .then(categoryDao.create(category))
                 .switchIfEmpty(Mono.error(new SystemException(NON_EXISTENT_ENTITY)))
                 .map(categoryMapper::entityToDto);
     }
@@ -52,7 +52,7 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = categoryMapper.dtoToEntity(categoryDto);
         return categoryDao.findByName(categoryDto.getName())
                 .switchIfEmpty(Mono.error(new SystemException(DUPLICATE_NAME)))
-                .then(categoryDao.save(category))
+                .then(categoryDao.create(category))
                 .switchIfEmpty(Mono.error(new SystemException(NON_EXISTENT_ENTITY)))
                 .map(categoryMapper::entityToDto);
     }
@@ -63,7 +63,7 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = categoryMapper.dtoToEntity(categoryDto);
         return categoryDao.findById(id)
                 .switchIfEmpty(Mono.error(new SystemException(NON_EXISTENT_ENTITY)))
-                .then(categoryDao.save(category))
+                .then(categoryDao.create(category))
                 .map(categoryMapper::entityToDto);
     }
 
@@ -78,8 +78,8 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Flux<CategoryDto> findAll(Pageable pageable) {
-        return categoryDao.findAll(pageable)
+    public Flux<CategoryDto> findAll() {
+        return categoryDao.findAll()
                 .map(categoryMapper::entityToDto);
     }
 
@@ -88,6 +88,6 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void delete(String id) {
         findById(id)
-                .then(categoryDao.deleteById(id));
+                .then(categoryDao.delete(id));
     }
 }

@@ -38,8 +38,8 @@ public class CategoryController {
     }
 
     @GetMapping
-    public Flux<CategoryDto> findAll(Pageable pageable) {
-        return categoryService.findAll(pageable);
+    public Flux<CategoryDto> findAll() {
+        return categoryService.findAll();
     }
 
     @DeleteMapping("{id}")

@@ -16,7 +16,7 @@ import java.util.List;
 @RedisHash("categories")
 @Data
 @Document("category")
-public class Category implements Serializable {
+public class Category{
 
     @Id
     @NotNull

@@ -18,7 +18,7 @@ import java.util.List;
 @RedisHash("items")
 @Data
 @Document("item")
-public class Item implements Serializable {
+public class Item {
 
     @Id
     @NotNull
