@@ -1,12 +1,8 @@
 package com.petrovskiy.mds.dao;
 
 import com.petrovskiy.mds.model.Category;
-import org.springframework.data.jpa.repository.JpaRepository;
+import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
-import java.util.Optional;
-
-public interface CategoryDao extends JpaRepository<Category, BigInteger> {
-    Optional<Category> findByName(String name);
-
+public interface CategoryDao extends BaseDao<Category, String> {
+    Mono<Category> findByName(String name);
 }

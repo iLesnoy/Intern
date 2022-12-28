@@ -4,42 +4,35 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder
-@Entity
-@Table(name="userTransaction")
+@Document("userTransaction")
 public class UserTransaction {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
-    private UUID id;
+    @NotNull
+    private String id;
 
-    @Column(name = "transactionDate", nullable = false)
+    @NotNull
+    @CreatedDate
     private LocalDateTime transactionDate;
 
-    @Column(name = "userId", nullable = false)
-    private UUID userId;
+    @NotNull
+    private String userId;
 
     @Size(min = 1)
-    @Column(name = "amount", nullable = false)
+    @NotNull
     private Long amount;
 
-    @ManyToOne
-    @JoinColumn(name = "position_id")
     private Position position;
-
-    @PrePersist
-    private void PrePersist(){
-        transactionDate = LocalDateTime.now();
-    }
-
 }

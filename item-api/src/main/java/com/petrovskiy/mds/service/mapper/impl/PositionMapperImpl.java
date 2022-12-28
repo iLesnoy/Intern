@@ -7,6 +7,8 @@ import com.petrovskiy.mds.service.dto.PositionDto;
 import com.petrovskiy.mds.service.mapper.PositionMapper;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Component
 public class PositionMapperImpl implements PositionMapper {
 

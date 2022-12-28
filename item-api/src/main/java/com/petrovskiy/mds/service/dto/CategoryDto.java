@@ -7,7 +7,6 @@ import lombok.Data;
 
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
-import java.math.BigInteger;
 
 @Builder
 @Data
@@ -15,7 +14,7 @@ import java.math.BigInteger;
 public class CategoryDto implements Serializable {
 
     @JsonProperty("id")
-    private BigInteger id;
+    private String id;
 
     @Pattern(regexp = "^[\\p{Alpha}А-Яа-я]{2,36}$")
     @JsonProperty("name")

@@ -7,7 +7,6 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Builder
 @Data
@@ -15,7 +14,7 @@ import java.util.UUID;
 public class ItemDto implements Serializable {
 
     @JsonProperty("id")
-    private UUID id;
+    private String id;
 
     @JsonProperty("name")
     private String name;
@@ -26,6 +25,6 @@ public class ItemDto implements Serializable {
     @JsonProperty("created")
     private LocalDateTime created;
 
-    @JsonProperty("category")
-    private CategoryDto categoryDto;
+    @JsonProperty("categoryId")
+    private String categoryId;
 }

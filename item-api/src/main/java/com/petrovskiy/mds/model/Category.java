@@ -1,34 +1,37 @@
 package com.petrovskiy.mds.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.redis.core.RedisHash;
 
-import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.List;
 
-@RedisHash("categories")
 @Data
-@Entity
-@Table(name = "category")
-public class Category implements Serializable {
+@Document("category")
+public class Category{
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    private BigInteger id;
+    @NotNull
+    private String id;
 
-    @Column(name = "name", nullable = false, unique = true)
+    @NotNull
+    @Indexed(unique = true)
     private String name;
 
-    @Column(name = "parent_category")
     private String parent_category;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
+    @DBRef
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private List<Item> itemList;
 
-
-    @Column(name = "description")
     private String description;
 
 }

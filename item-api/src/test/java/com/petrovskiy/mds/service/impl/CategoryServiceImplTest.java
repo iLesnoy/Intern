@@ -1,3 +1,4 @@
+/*
 package com.petrovskiy.mds.service.impl;
 
 import com.petrovskiy.mds.service.dto.CategoryDto;
@@ -120,4 +121,4 @@ class CategoryServiceImplTest extends AbstractCacheTest {
     private void getAndPrint(BigInteger id) {
         log.info("find category: {}", service.findById(id));
     }
-}
+}*/

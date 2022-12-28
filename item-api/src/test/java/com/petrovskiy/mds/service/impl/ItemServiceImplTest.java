@@ -1,3 +1,4 @@
+/*
 package com.petrovskiy.mds.service.impl;
 
 import com.petrovskiy.mds.service.dto.CategoryDto;
@@ -109,4 +110,4 @@ class ItemServiceImplTest extends AbstractCacheTest{
     private void getAndPrint(UUID id) {
         log.info("find user: {}",itemService.findById(id));
     }
-}
+}*/

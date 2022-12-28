@@ -7,6 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
 import java.math.BigInteger;
@@ -20,29 +22,29 @@ public class CategoryController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CategoryDto create(@RequestBody @Valid CategoryDto categoryDto) {
+    public Mono<CategoryDto> create(@RequestBody @Valid CategoryDto categoryDto) {
         return categoryService.create(categoryDto);
     }
 
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public CategoryDto update(@PathVariable BigInteger id, @RequestBody @Valid CategoryDto categoryDto){
+    public Mono<CategoryDto> update(@PathVariable String id, @RequestBody @Valid CategoryDto categoryDto){
         return categoryService.update(id,categoryDto);
     }
 
     @GetMapping("/{id}")
-    public CategoryDto findById(@PathVariable BigInteger id) {
+    public Mono<CategoryDto> findById(@PathVariable String id) {
         return categoryService.findById(id);
     }
 
     @GetMapping
-    public Page<CategoryDto> findAll(Pageable pageable) {
-        return categoryService.findAll(pageable);
+    public Flux<CategoryDto> findAll() {
+        return categoryService.findAll();
     }
 
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void delete(@PathVariable BigInteger id){
+    public void delete(@PathVariable String id){
         categoryService.delete(id);
     }
 }

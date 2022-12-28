@@ -4,25 +4,19 @@ import com.petrovskiy.mds.dao.ItemDao;
 import com.petrovskiy.mds.model.Item;
 import com.petrovskiy.mds.service.ItemService;
 import com.petrovskiy.mds.service.dto.CategoryDto;
-import com.petrovskiy.mds.service.dto.CustomPage;
 import com.petrovskiy.mds.service.dto.ItemDto;
 import com.petrovskiy.mds.service.exception.SystemException;
 import com.petrovskiy.mds.service.mapper.ItemMapper;
 import com.petrovskiy.mds.service.validation.PageValidation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import org.springframework.cache.annotation.Cacheable;
-import java.util.UUID;
+import reactor.core.publisher.Mono;
 
 import static com.petrovskiy.mds.service.exception.ExceptionCode.NON_EXISTENT_ENTITY;
-import static com.petrovskiy.mds.service.exception.ExceptionCode.NON_EXISTENT_PAGE;
 
 @Slf4j
 @Service
@@ -35,7 +29,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Autowired
     public ItemServiceImpl(ItemDao itemDao, ItemMapper itemMapper,
-                           CategoryServiceImpl categoryService,PageValidation validation) {
+                           CategoryServiceImpl categoryService, PageValidation validation) {
         this.itemDao = itemDao;
         this.itemMapper = itemMapper;
         this.categoryService = categoryService;
@@ -44,61 +38,65 @@ public class ItemServiceImpl implements ItemService {
 
 
     @Transactional
-    @Cacheable(value = "items", key = "#itemDto.name")
     @Override
-    public ItemDto create(ItemDto itemDto) {
+    public Mono<ItemDto> create(ItemDto itemDto) {
         log.info("creating item : {}", itemDto);
-        CategoryDto categoryDto = categoryService.findById(itemDto.getCategoryDto().getId());
-        setCategoryToItem(itemDto,categoryDto);
-        Item item  =  itemDao.save(itemMapper.dtoToEntity(itemDto));
-        return itemMapper.entityToDto(item);
+        Item item = itemMapper.dtoToEntity(itemDto);
+        Mono<CategoryDto> categoryMono = categoryService.findById(itemDto.getCategoryId());
+        setCategoryToItem(itemDto, categoryMono);
+
+        return categoryService.findById(itemDto.getCategoryId())
+                .switchIfEmpty(Mono.error(new SystemException(NON_EXISTENT_ENTITY)))
+                .then(itemDao.create(item))
+                .map(itemMapper::entityToDto);
     }
 
     @Transactional
-    @CachePut(value = "items", key = "#itemDto.name")
-    public ItemDto createAndRefresh(ItemDto itemDto) {
-        log.info("creating item : {}", itemDto);
-        CategoryDto categoryDto = categoryService.findById(itemDto.getCategoryDto().getId());
-        setCategoryToItem(itemDto,categoryDto);
-        Item item  =  itemDao.save(itemMapper.dtoToEntity(itemDto));
-        return itemMapper.entityToDto(item);
+    public Mono<ItemDto> createAndRefresh(ItemDto itemDto) {
+        log.info("creating and refreshCache item : {}", itemDto);
+        Item item = itemMapper.dtoToEntity(itemDto);
+        Mono<CategoryDto> categoryMono = categoryService.findById(itemDto.getCategoryId());
+        setCategoryToItem(itemDto, categoryMono);
+
+        return categoryService.findById(itemDto.getCategoryId())
+                .switchIfEmpty(Mono.error(new SystemException(NON_EXISTENT_ENTITY)))
+                .then(itemDao.create(item))
+                .map(itemMapper::entityToDto);
+
     }
 
-    private void setCategoryToItem(ItemDto itemDto, CategoryDto categoryDto){
-        itemDto.setCategoryDto(categoryDto);
+    private void setCategoryToItem(ItemDto itemDto, Mono<CategoryDto> categoryDto) {
+        itemDto.setCategoryId(categoryDto.block().getId());
     }
 
 
     @Override
-    public ItemDto update(UUID id, ItemDto itemDto) {
-        Item item =  itemDao.save(itemMapper.dtoToEntity(findById(id)));
-        return itemMapper.entityToDto(item);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    @Cacheable("items")
-    public ItemDto findById(UUID id) {
-        log.info("getting item by id: {}", id);
-        Item item =  itemDao.findById(id).orElseThrow(()->new SystemException(NON_EXISTENT_ENTITY));
-        return itemMapper.entityToDto(item);
-    }
-
-    @Override
-    public Page<ItemDto> findAll(Pageable pageable) {
-        Page<Item> orderPage = itemDao.findAll(pageable);
-        if(!validation.isPageExists(pageable,orderPage.getTotalElements())){
-            throw new SystemException(NON_EXISTENT_PAGE);
-        }
-        return new CustomPage<>(orderPage.getContent(), orderPage.getPageable(), orderPage.getTotalElements())
+    public Mono<ItemDto> update(String id, ItemDto itemDto) {
+        Item item = itemMapper.dtoToEntity(itemDto);
+        return itemDao.findById(id)
+                .switchIfEmpty(Mono.error(new SystemException(NON_EXISTENT_ENTITY)))
+                .then(itemDao.create(item))
                 .map(itemMapper::entityToDto);
     }
 
     @Override
-    @CacheEvict("items")
-    public void delete(UUID id) {
-        itemDao.findById(id).ifPresentOrElse(item ->
-            itemDao.deleteById(item.getId())
-                , ()->new SystemException(NON_EXISTENT_ENTITY));
+    @Transactional(readOnly = true)
+    public Mono<ItemDto> findById(String id) {
+        log.info("getting item by id: {}", id);
+        return itemDao.findById(id)
+                .switchIfEmpty(Mono.error(new SystemException(NON_EXISTENT_ENTITY)))
+                .map(itemMapper::entityToDto);
+    }
+
+    @Override
+    public Page<ItemDto> findAll(Pageable pageable) {
+        return itemDao.findAll(pageable)
+                .map(itemMapper::entityToDto);
+    }
+
+    @Override
+    public void delete(String id) {
+        findById(id)
+                .then(itemDao.delete(id));
     }
 }

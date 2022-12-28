@@ -1,17 +1,17 @@
 package com.petrovskiy.mds.service;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public interface BaseService<T,B> {
 
-    T create(T t);
+    Mono<T> create(T t);
 
-    T update(B id, T t);
+    Mono<T> update(B id, T t);
 
-    T findById(B id);
+    Mono<T> findById(B id);
 
-    Page<T> findAll(Pageable pageable);
+    Flux<T> findAll();
 
     void delete(B id);
 }
