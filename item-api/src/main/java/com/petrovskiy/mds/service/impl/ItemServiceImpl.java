@@ -10,13 +10,10 @@ import com.petrovskiy.mds.service.mapper.ItemMapper;
 import com.petrovskiy.mds.service.validation.PageValidation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import static com.petrovskiy.mds.service.exception.ExceptionCode.NON_EXISTENT_ENTITY;
@@ -41,7 +38,6 @@ public class ItemServiceImpl implements ItemService {
 
 
     @Transactional
-    @Cacheable(value = "items", key = "#itemDto.name")
     @Override
     public Mono<ItemDto> create(ItemDto itemDto) {
         log.info("creating item : {}", itemDto);
@@ -56,7 +52,6 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Transactional
-    @CachePut(value = "items", key = "#itemDto.name")
     public Mono<ItemDto> createAndRefresh(ItemDto itemDto) {
         log.info("creating and refreshCache item : {}", itemDto);
         Item item = itemMapper.dtoToEntity(itemDto);
@@ -86,7 +81,6 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable("items")
     public Mono<ItemDto> findById(String id) {
         log.info("getting item by id: {}", id);
         return itemDao.findById(id)
@@ -95,13 +89,12 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Flux<ItemDto> findAll() {
-        return itemDao.findAll()
+    public Page<ItemDto> findAll(Pageable pageable) {
+        return itemDao.findAll(pageable)
                 .map(itemMapper::entityToDto);
     }
 
     @Override
-    @CacheEvict("items")
     public void delete(String id) {
         findById(id)
                 .then(itemDao.delete(id));

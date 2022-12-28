@@ -1,123 +1,129 @@
-package com.petrovskiy.mds.service.impl;
+package com.petrovskiy.mds;
 
-import com.petrovskiy.mds.model.Role;
 import com.petrovskiy.mds.service.dto.CompanyDto;
 import com.petrovskiy.mds.service.dto.UserDto;
 import com.petrovskiy.mds.service.exception.SystemException;
+import com.petrovskiy.mds.service.impl.UserServiceImpl;
+import org.junit.ClassRule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.utility.DockerImageName;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.TransactionSystemException;
+import org.testcontainers.containers.PostgreSQLContainer;
 
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class UserServiceImplTest extends AbstractCacheTest{
 
-    private UserDto expected;
-    private UserDto expected2;
-    private CompanyDto companyDto;
-    private Logger log = LoggerFactory.getLogger(UserServiceImplTest.class);
+@RunWith(SpringRunner.class)
+@SpringBootTest
+class UserServiceIntegrationTest {
 
-    static {
-        GenericContainer<?> redis =
-                new GenericContainer<>(DockerImageName.parse("redis:5.0.3-alpine")).withExposedPorts(6379);
-        redis.start();
-        System.setProperty("spring.redis.host", redis.getHost());
-        System.setProperty("spring.redis.port", redis.getMappedPort(6379).toString());
-    }
+    @ClassRule
+    public static PostgreSQLContainer postgreSQLContainer = PostgreTestContainer.getInstance();
 
     @Autowired
-    private UserServiceImpl service;
+    private UserServiceImpl userService;
 
+    private CompanyDto companyDto;
+    private UserDto expected;
+    private Pageable pageable;
 
     @BeforeEach
     void setUp() {
-        companyDto = CompanyDto.builder()
-                .created(LocalDateTime.now())
-                .description("test")
-                .name("test")
-                .id(1L)
-                .build();
-        expected = UserDto.builder()
-                .id(UUID.randomUUID())
-                .updated(LocalDateTime.now())
-                .name("test")
-                .companyDto(companyDto)
-                .role(Role.MANAGER).email("hello@gmai.com")
-                .build();
-        expected2 = UserDto.builder()
-                .id(UUID.randomUUID())
-                .updated(LocalDateTime.now())
-                .name("test2").companyDto(companyDto)
-                .role(Role.STORAGE_MANAGER).email("arnold@gmai.com")
-                .build();
+        companyDto = new CompanyDto();
+        companyDto.setId(1L);
+        companyDto.setName("comp");
+        companyDto.setDescription("comp");
+        companyDto.setCreated(LocalDateTime.parse("2022-10-30T18:54:24.642255"));
+        companyDto.setEmail("compa@gmail.com");
+
+        expected = UserDto.builder().
+        username("IVAN")
+                .name("ivak")
+        .email("user@mail.ru")
+        .companyDto(companyDto).build();
+
+
+    }
+
+
+    @Test
+    void findAll() {
+        Page<UserDto> page = userService.findAll(pageable);
+        assertTrue(page.getSize()>=2);
     }
 
     @Test
-    public void create() {
-        UserDto userDto = service.create(expected);
-        assertEquals(userDto.getName(),expected.getName());
+    void createWithInvalidData() {
+        expected.setEmail("invalid");
+        TransactionSystemException systemException = assertThrows(
+                TransactionSystemException.class,
+                ()->{userService.create(expected);}
+        );
+        assertNotNull(systemException);
+
+    }
+
+    @Test
+    void create() {
+        expected.setCompanyDto(companyDto);
+        UserDto actual = userService.create(expected);
+        assertEquals(expected.getCompanyDto(),actual.getCompanyDto());
+    }
+
+
+    @Test
+    void findByNotExistId() {
+        SystemException systemException = assertThrows(
+                SystemException.class,
+                ()->{userService.findById(UUID.randomUUID());}
+        );
+        assertEquals(systemException.getErrorCode(),40410);
     }
 
     @Test
     void findById() {
-        UserDto userDto  = service.create(expected);
-        getAndPrint(userDto.getId());
-        UserDto expected = service.findById(userDto.getId());
-        assertEquals(userDto.getName(), expected.getName());
+        UserDto actual = userService.findById(UUID.fromString("51dfcd39-6046-413d-aa88-6c9530375247"));
+        assertEquals(actual.getName(),"ivak");
     }
 
     @Test
-    void findByIdNonExist() {
-        UserDto userDto = service.create(this.expected);
-        getAndPrint(userDto.getId());
+    void updateNonExistId() {
         SystemException systemException = assertThrows(
                 SystemException.class,
-                () -> {
-                    service.findById(UUID.randomUUID());
-                }
+                ()->{userService.update(UUID.randomUUID(),expected);}
         );
-        assertNotNull(systemException);
+        assertEquals(systemException.getErrorCode(),40410);
     }
 
     @Test
-    public void createAndRefresh() {
-        UserDto refresh = service.createAndRefresh(this.expected);
-        log.info("created user: {}", expected);
-        assertEquals(refresh.getName(),expected.getName());
+    void update() {
+        expected.setEmail("updated@gmail.com");
+        UserDto userDto = userService.update(UUID.fromString("51dfcd39-6046-413d-aa88-6c9530375247"),expected);
+        assertEquals("updated@gmail.com",userDto.getName());
     }
 
     @Test
-    public void delete() {
-        UserDto userDto = service.create(expected);
-        log.info("{}", service.findById(userDto.getId()));
-
-        UserDto userDto1 = service.create(expected2);
-        log.info("{}", service.findById(userDto1.getId()));
-
-        service.delete(userDto.getId());
-        service.delete(userDto1.getId());
+    void deleteByNotExistId() {
         SystemException systemException = assertThrows(
                 SystemException.class,
-                () -> {
-                    log.info("{}", service.findById(userDto.getId()));
-                    log.info("{}", service.findById(userDto1.getId()));
-                }
+                ()->{userService.delete(UUID.randomUUID());}
         );
-        assertNotNull(systemException);
+        assertEquals(systemException.getErrorCode(),40410);
     }
 
-    private void createAndPrint(UserDto userDto) {
-        log.info("created user: {}", service.create(userDto));
+    @Test
+    void deleteById() {
+        userService.delete(UUID.fromString("51dfcd39-6046-413d-aa88-6c9530375247"));
     }
 
-    private void getAndPrint(UUID id) {
-        log.info("find user: {}", service.findById(id));
-    }
 }

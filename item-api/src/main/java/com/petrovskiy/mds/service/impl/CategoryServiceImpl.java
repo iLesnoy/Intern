@@ -8,13 +8,10 @@ import com.petrovskiy.mds.service.exception.SystemException;
 import com.petrovskiy.mds.service.mapper.CategoryMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import static com.petrovskiy.mds.service.exception.ExceptionCode.DUPLICATE_NAME;
@@ -34,7 +31,6 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Transactional
-    @Cacheable(value = "categories", key = "#categoryDto.name")
     @Override
     public Mono<CategoryDto> create(CategoryDto categoryDto) {
         Category category = categoryMapper.dtoToEntity(categoryDto);
@@ -46,7 +42,6 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Transactional
-    @CachePut(value = "categories", key = "#categoryDto.name")
     public Mono<CategoryDto> createAndRefresh(CategoryDto categoryDto) {
         log.info("creating category : {}", categoryDto);
         Category category = categoryMapper.dtoToEntity(categoryDto);
@@ -69,7 +64,6 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable("categories")
     public Mono<CategoryDto> findById(String id) {
         log.info("getting category by id: {}", id);
         return categoryDao.findById(id)
@@ -78,13 +72,12 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Flux<CategoryDto> findAll() {
-        return categoryDao.findAll()
+    public Page<CategoryDto> findAll(Pageable pageable) {
+        return categoryDao.findAll(pageable)
                 .map(categoryMapper::entityToDto);
     }
 
     @Transactional
-    @CacheEvict("categories")
     @Override
     public void delete(String id) {
         findById(id)

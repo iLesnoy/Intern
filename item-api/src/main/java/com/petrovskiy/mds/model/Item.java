@@ -15,7 +15,6 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@RedisHash("items")
 @Data
 @Document("item")
 public class Item {
